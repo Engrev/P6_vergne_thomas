@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Table(name="st_users", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_username", columns={"username"})})
+ * @UniqueEntity(fields={"username"}, message="Un utilisateur existe déjà avec ce pseudo.")
  */
 class User
 {
@@ -14,16 +17,13 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="Figure", mappedBy="author")
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="id_user")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned"=true})
-     */
-    private $id_group;
-
-    /**
-     * @ORM\Column(type="string", length=100, unique=true)
+     * @ORM\Column(type="string", length=100)
      */
     private $username;
 
@@ -85,18 +85,6 @@ class User
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdGroup(): ?int
-    {
-        return $this->id_group;
-    }
-
-    public function setIdGroup(int $id_group): self
-    {
-        $this->id_group = $id_group;
-
-        return $this;
     }
 
     public function getUsername(): ?string

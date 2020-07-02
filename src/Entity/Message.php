@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=MessageRepository::class)
+ * @ORM\Table(name="st_messages")
  */
 class Message
 {
@@ -19,11 +20,13 @@ class Message
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Figure", inversedBy="id")
      */
     private $id_figure;
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="id")
      */
     private $id_user;
 

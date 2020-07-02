@@ -1,0 +1,2 @@
+.alert-messages .alert:first-child { margin-top: 50px; }
+.alert-messages .alert:last-child { margin-bottom: 50px; }

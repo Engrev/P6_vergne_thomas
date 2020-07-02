@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
+ * @ORM\Table(name="st_categories")
  */
 class Category
 {
@@ -14,6 +15,7 @@ class Category
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="Figure", mappedBy="id_category")
      */
     private $id;
 

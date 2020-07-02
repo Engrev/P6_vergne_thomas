@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\FigureRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
+ * @ORM\Table(name="st_figures", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_name", columns={"name"})})
+ * @UniqueEntity(fields={"name"}, message="Une figure existe déjà avec ce nom.")
  */
 class Figure
 {
@@ -14,11 +17,13 @@ class Figure
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="id_figure")
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="id")
      */
     private $id_category;
 
@@ -39,6 +44,7 @@ class Figure
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="id")
      */
     private $author;
 
