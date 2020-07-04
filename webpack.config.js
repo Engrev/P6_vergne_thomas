@@ -14,6 +14,9 @@ Encore
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
+    // Fixing jQuery Plugins that Expect jQuery to be Global.
+    .autoProvidejQuery()
+
     /*
      * ENTRY CONFIG
      *
