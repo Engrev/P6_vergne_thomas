@@ -1,12 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="robots" content="noindex, nofollow">
+        <title>{% block title %}{% endblock %} &bull; Snowtricks</title>
+        {% block seo %}{% endblock %}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-theme">
+            <span class="navbar-brand">Snowtricks</span>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link{% if current_menu is defined and current_menu == 'homepage' %} active{% endif %}" href="{{ path('index') }}">
+                            Accueil{% if current_menu is defined and current_menu == 'homepage' %} <span class="sr-only">(current)</span>{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégories</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for categorie_navbar in categories_navbar %}
+                                <a class="dropdown-item{#{{ categorie_navbar.name == category.name ? ' active' : '' }}#}" href="{{ categorie_navbar.link }}/1">
+                                    {{ categorie_navbar.name }} {#<span class="text-muted font-italic">{{ number_posts[categorie_navbar.id] }}</span>#}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if current_menu is defined and current_menu == 'signin' %} active{% endif %}" href="#">
+                            Connexion{% if current_menu is defined and current_menu == 'signin' %} <span class="sr-only">(current)</span>{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if current_menu is defined and current_menu == 'signup' %} active{% endif %}" href="#">
+                            Inscription{% if current_menu is defined and current_menu == 'signup' %} <span class="sr-only">(current)</span>{% endif %}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container alert-messages">
+            <div class="row d-block">
+                <div class="col-xs">
+                    {% for label, messages in app.flashes %}
+                        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <ul class="mb-0">
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+
+        <footer class="bg-theme">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-sm-4">
+                        <p class="nom">Snowtricks</p>
+                        <p class="description">La communauté pour des snowboarders par des snowboarders.</p>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <h6>Nos réseaux</h6>
+                        <ul class="reseaux">
+                            <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                            <li><a href="#" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                            <li><a href="#" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <h6>Accès</h6>
+                        <ul class="acces">
+                            <li><a href="mailto:local@blog.engrev.fr"><i class="fas fa-paper-plane"></i> Nous envoyer un mail</a></li>
+                            <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+                            <li><a href="#"><i class="fas fa-sign-in-alt"></i> Se connecter</a></li>
+                            <li><a href="#"><i class="fas fa-user-plus"></i> S'inscrire</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="back-to-top"></button>
+        </footer>
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
     </body>
 </html>

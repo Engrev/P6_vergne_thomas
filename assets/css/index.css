@@ -1,0 +1,34 @@
+#index header { position: relative; }
+#index header img { display: block; max-width: 100%; height: auto; }
+#scrollDown-to-figures::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f078"; color: white; }
+#scrollDown-to-figures { width: 40px; height: 40px; background-color: var(--theme-color); border: 0; position: absolute; }
+#index main.wrap { padding: 50px 15px; }
+#index .figures-list .figure .card { box-shadow: 0 1px 2px 0 rgba(168,182,191,.6); transition: all var(--transition-duration) ease-out; }
+#index .figures-list .figure .card:hover { box-shadow: 0 10px 20px 0 rgba(168,182,191,.6); transform: translateY(-1px); }
+#index .figures-list .figure .card .card-body a { display: inline-block; }
+#index .figures-list .figure .card .card-body .btn-edit-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f304"; color: #ffc107; }
+#index .figures-list .figure .card .card-body .btn-delete-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; color: #dc3545; }
+#btn-show-more-figures {
+    background: var(--theme-color-light);
+    background: -moz-linear-gradient(left, var(--theme-color-light) 0%, var(--theme-color) 100%);
+    background: -webkit-linear-gradient(left, var(--theme-color-light) 0%, var(--theme-color) 100%);
+    background: linear-gradient(to right, var(--theme-color-light) 0%, var(--theme-color) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#25a5e4', endColorstr='#014cb1',GradientType=1 );
+    border: none;
+}
+#collapseFiguresList { position: relative; }
+#scrollUp-to-figures::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f077"; color: white; }
+#scrollUp-to-figures { width: 40px; height: 40px; background-color: var(--theme-color); border: 0; position: absolute; }
+@media screen AND (min-width: 992px) {
+    #scrollDown-to-figures { bottom: 200px; right: 15px; }
+    #scrollUp-to-figures { bottom: 0; right: 15px; }
+    #index main.wrap { padding: 50px 0; }
+    #index .figures-list { margin-bottom: 20px; }
+    #index .figures-list .figure { min-width: calc((100% / 5) - 20px); }
+}
+@media screen AND (max-width: 576px) {
+    #scrollDown-to-figures { bottom: 0; right: 15px; }
+    #scrollUp-to-figures { bottom: -40px; right: 15px; }
+    #index main.wrap { padding: 50px 0; }
+    #index .figures-list .figure { display: block; width: 100%; margin-bottom: 20px; }
+}
