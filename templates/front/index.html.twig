@@ -50,13 +50,13 @@
                             </div>
                         {% endif %}
                     {% endif %}
-                    {% if loop.index is divisible by(5) %}</div><div class="row justify-content-center figures-list">{% endif %}
+                    {% if loop.index is divisible by(5) %}</div><div class="row justify-content-lg-center figures-list">{% endif %}
                     {% if loop.last %}
                         </div>
                     {% endif %}
                 {% endfor %}
                 {% if figures|length > 15 %}
-                    <button type="button" class="btn btn-theme d-block mx-auto" id="btn-show-more-figures" data-toggle="collapse" data-target="#collapseFiguresList" aria-expanded="false" aria-controls="collapseFiguresList">
+                    <button type="button" class="btn btn-theme d-block mx-auto bg-theme" id="btn-show-more-figures" data-toggle="collapse" data-target="#collapseFiguresList" aria-expanded="false" aria-controls="collapseFiguresList">
                         <i class="fas fa-plus"></i> Voir plus
                     </button>
                 {% endif %}
