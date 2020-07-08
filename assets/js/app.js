@@ -9,11 +9,16 @@
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../css/fonts.css';
 import '../css/app.css';
-import '../css/index.css';
 import '../css/navbar.css';
+import '../css/index.css';
+import '../css/security/login.css';
+import '../css/registration/register.css';
+import '../css/reset_password/request.css';
+import '../css/reset_password/check_email.css';
+import '../css/reset_password/reset.css';
 
-import 'jquery/dist/jquery.min';
 import '@fortawesome/fontawesome-free/js/all.min';
+import 'jquery/dist/jquery.min';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import '../js/main';

@@ -1,0 +1,4 @@
+#checkEmail { text-align: center; height: calc(100vh - 56px); display: -ms-flexbox; display: flex; flex-direction: column; justify-content: center; }
+#checkEmail h1 { margin-bottom: 40px; }
+#checkEmail p span { text-decoration: underline; }
+#checkEmail p a { color: var(--theme-color); }

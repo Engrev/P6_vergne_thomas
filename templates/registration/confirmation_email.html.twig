@@ -1,0 +1,48 @@
+{% apply inline_css %}
+    <style>
+        main { padding: 40px; background-color: #f5f5f5; }
+        section { padding: 40px 80px; border-top: 3px solid #014cb1; border-bottom: 3px solid #25a5e4; width: 50%; margin: 0 auto; background-color: white; }
+        h1 { color: #014cb1; font-weight: bold; font-size: 2rem; margin-bottom: 20px; }
+        p { margin-bottom: 10px; }
+        a:not(.btn) { color: #014cb1; }
+        .btn-container { display: block; text-align: center; }
+        a.btn {
+            background: #014cb1;
+            background: -moz-linear-gradient(top, #014cb1 0%, #25a5e4 100%);
+            background: -webkit-linear-gradient(top, #014cb1 0%, #25a5e4 100%);
+            background: linear-gradient(to bottom, #014cb1 0%, #25a5e4 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#014cb1', endColorstr='#25a5e4',GradientType=0 );
+            cursor: pointer;
+            padding: 6px 24px;
+            display: inline-block;
+            margin: 20px 0;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+        }
+        p span { text-decoration: underline; }
+        p.signature { font-weight: bold; font-style: italic; margin-top: 40px; }
+    </style>
+
+    <main>
+        <section>
+            <h1>Validation de votre compte</h1>
+
+            <p>Bonjour {{ username }},</p>
+
+            <p>Vous avez récemment créer un compte sur notre site communautaire <a href="http://snowtricks.local">Snowtricks</a>.</p>
+            <p>Afin de valider votre compte, merci de cliquer sur le lien ci-dessous :</p>
+
+            <div class="btn-container">
+                <a href="{{ signedUrl|raw }}" class="btn">Vérifier mon adresse email</a>
+            </div>
+
+            <p>Attention ! Ce lien expire le <span>{{ expiresAt|date("d/m/Y \\à H:i", "Europe/Paris") }}</span>.</p>
+
+            <p class="signature">Snowtricks, La communauté pour des snowboarders par des snowboarders.</p>
+        </section>
+    </main>
+{% endapply %}

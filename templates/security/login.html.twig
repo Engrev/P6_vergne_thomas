@@ -1,0 +1,46 @@
+{# templates/security/login.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <section id="login" class="container">
+
+        <h1 class="h3">Connexion</h1>
+
+        <div id="loginForm">
+            {% if error %}
+                <div class="row">
+                    <div class="col-12 col-md-6 mx-md-auto">
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security', 'fr') }}</div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <form action="" method="POST">
+                <div class="form-group">
+                    <label for="inputUsername">Pseudo</label>
+                    <input type="text" class="custom-input-theme" name="_username" id="inputUsername" value="{{ last_username }}" required="required" autofocus="autofocus">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputPassword">Mot de passe</label>
+                    <input type="password" class="custom-input-theme" name="_password" id="inputPassword" required="required">
+                </div>
+
+                <a href="{{ path('forgot_password_request') }}" class="d-inline-block">Mot de passe oublié ?</a>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="form-check my-4">
+                    <input type="checkbox" id="inputRememberMe" class="form-check-input" name="_remember_me">
+                    <label for="inputRememberMe" class="form-check-label">Se souvenir de moi</label>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-theme bg-theme">Me connecter</button>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

@@ -19,9 +19,9 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link{% if current_menu is defined and current_menu == 'homepage' %} active{% endif %}" href="{{ path('index') }}">
-                            Accueil{% if current_menu is defined and current_menu == 'homepage' %} <span class="sr-only">(current)</span>{% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link{% if current_menu is defined and current_menu == 'index' %} active{% endif %}" href="{{ path('index') }}">
+                            Accueil{% if current_menu is defined and current_menu == 'index' %} <span class="sr-only">(current)</span>{% endif %}
                         </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -34,16 +34,22 @@
                             {% endfor %}
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if current_menu is defined and current_menu == 'signin' %} active{% endif %}" href="#">
-                            Connexion{% if current_menu is defined and current_menu == 'signin' %} <span class="sr-only">(current)</span>{% endif %}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if current_menu is defined and current_menu == 'signup' %} active{% endif %}" href="#">
-                            Inscription{% if current_menu is defined and current_menu == 'signup' %} <span class="sr-only">(current)</span>{% endif %}
-                        </a>
-                    </li>
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('logout') }}">Déconnexion</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if current_menu is defined and current_menu == 'login' %} active{% endif %}" href="{{ path('login') }}">
+                                Connexion{% if current_menu is defined and current_menu == 'login' %} <span class="sr-only">(current)</span>{% endif %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if current_menu is defined and current_menu == 'register' %} active{% endif %}" href="{{ path('register') }}">
+                                Inscription{% if current_menu is defined and current_menu == 'register' %} <span class="sr-only">(current)</span>{% endif %}
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
@@ -51,7 +57,7 @@
         <div class="container alert-messages">
             <div class="row d-block">
                 <div class="col-xs">
-                    {% for label, messages in app.flashes %}
+                    {% for label, messages in app.flashes('success') or app.flashes('warning') or app.flashes('danger') %}
                         <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -89,8 +95,8 @@
                         <ul class="acces">
                             <li><a href="mailto:local@blog.engrev.fr"><i class="fas fa-paper-plane"></i> Nous envoyer un mail</a></li>
                             <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
-                            <li><a href="#"><i class="fas fa-sign-in-alt"></i> Se connecter</a></li>
-                            <li><a href="#"><i class="fas fa-user-plus"></i> S'inscrire</a></li>
+                            <li><a href="{{ path('login') }}"><i class="fas fa-sign-in-alt"></i> Se connecter</a></li>
+                            <li><a href="{{ path('register') }}"><i class="fas fa-user-plus"></i> S'inscrire</a></li>
                         </ul>
                     </div>
                 </div>

@@ -1,0 +1,17 @@
+#registration { text-align: center; height: calc(100vh - 56px); display: -ms-flexbox; display: flex; flex-direction: column; justify-content: center; }
+#registrationForm { margin: 50px 0; }
+#registrationForm form .form-group { margin-bottom: 30px; }
+#registrationForm form .form-group label + input.custom-input-theme { display: block; }
+#registrationForm form .form-group input.custom-input-theme {
+    border: none;
+    border-bottom: 2px solid #ced4da;
+    padding: 6px 12px;
+    color: #495057;
+    height: 30px;
+    margin: auto;
+    background-color: transparent;
+    transition: border-bottom-color 200ms ease-in-out, background-color 100ms ease-in-out;
+}
+#registrationForm form .form-group input.custom-input-theme:focus { border-bottom-color: var(--theme-color); background-color: white; }
+#registrationForm form .form-group ul { padding-left: 0; }
+#registrationForm form .form-group ul li { color: #dc3545; list-style: none; }
