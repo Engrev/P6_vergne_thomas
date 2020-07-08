@@ -5,8 +5,8 @@
     --transition-duration: 250ms;
 }
 /*::selection { color: white; background-color: var(--theme-color); }*/
-/*html { position: relative; height: 100%; }*/
-body { background-color: #f5f5f5; font-family: 'Roboto', sans-serif; /*height: 100%; display: flex; flex-direction: column;*/ }
+html { position: relative; height: 100%; }
+body { background-color: #f5f5f5; font-family: 'Roboto', sans-serif; height: 100%; display: flex; flex-direction: column; }
 h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 { font-family: 'Oswald', sans-serif; }
 h1,.h1 { margin: 30px 0; color: var(--theme-color); }
 a { color: black; transition: color var(--transition-duration); }
@@ -14,6 +14,7 @@ a:hover { color: var(--theme-color); text-decoration: none; }
 .btn-theme { color: white; background-color: var(--theme-color); border-color: var(--theme-color); }
 .btn-theme:hover { color: white; box-shadow: 0 0 0 .2rem var(--theme-color-alpha); }
 .btn, form .form-control { border-radius: 0; }
+.btn.bg-theme { border: none; }
 .bg-theme {
     background: var(--theme-color-light);
     background: -moz-linear-gradient(left, var(--theme-color-light) 0%, var(--theme-color) 100%);

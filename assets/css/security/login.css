@@ -1,0 +1,19 @@
+#login { text-align: center; height: calc(100vh - 56px); display: -ms-flexbox; display: flex; flex-direction: column; justify-content: center; }
+#loginForm { margin: 50px 0; }
+#loginForm form .form-group { margin-bottom: 30px; }
+#loginForm form .form-group label + input.custom-input-theme { display: block; }
+#loginForm form .form-group input.custom-input-theme {
+    border: none;
+    border-bottom: 2px solid #ced4da;
+    padding: 6px 12px;
+    color: #495057;
+    height: 30px;
+    margin: auto;
+    background-color: transparent;
+    transition: border-bottom-color 200ms ease-in-out, background-color 100ms ease-in-out;
+}
+#loginForm form .form-group input.custom-input-theme:focus { border-bottom-color: var(--theme-color); background-color: white; }
+#loginForm form .form-check input + label { cursor: pointer; }
+#inputRememberMe { border: 1px solid #ced4da; border-radius: 4px; transition: background-color 200ms ease-in-out, border-color 200ms ease-in-out, box-shadow 200ms ease-in-out; }
+#inputRememberMe:focus { box-shadow: 0 0 0 .2rem var(--theme-color-alpha); }
+#inputRememberMe:checked, #inputRememberMe:hover { border-color: var(--theme-color); }

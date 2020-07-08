@@ -5,13 +5,18 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * Class User
+ * @package App\Entity
+ *
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="st_users", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_username", columns={"username"})})
  * @UniqueEntity(fields={"username"}, message="Un utilisateur existe déjà avec ce pseudo.")
  */
-class User
+class User implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -24,23 +29,29 @@ class User
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\Type("string")
+     * @Assert\Length(min = 2, max = 100, allowEmptyString = false)
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Type("string")
+     * @Assert\Length(min = 2, max = 255, allowEmptyString = false)
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Type("string")
+     * @Assert\Length(min = 8, allowEmptyString = false)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="json")
      */
-    private $is_active;
+    private $roles = [];
 
     /**
      * @ORM\Column(type="integer", nullable=true, options={"unsigned"=true})
@@ -48,19 +59,19 @@ class User
     private $avatar;
 
     /**
-     * @ORM\Column(type="string", length=60, nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private $reset_token;
+    private $isActive = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $reset_token_at;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $remember_token;
+    private $isVerifiedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -77,21 +88,35 @@ class User
      */
     private $updated_at;
 
+    /**
+     * User constructor.
+     */
     public function __construct()
     {
-        $this->created_at = $this->updated_at = new \DateTime();
+        $this->created_at = $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
+    /**
+     * @param string $username
+     *
+     * @return $this
+     */
     public function setUsername(string $username): self
     {
         $this->username = $username;
@@ -99,11 +124,19 @@ class User
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     *
+     * @return $this
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -111,11 +144,19 @@ class User
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
+    /**
+     * @param string $password
+     *
+     * @return $this
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -123,23 +164,43 @@ class User
         return $this;
     }
 
-    public function getIsActive(): ?bool
+    /**
+     * @return array
+     */
+    public function getRoles(): array
     {
-        return $this->is_active;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    public function setIsActive(bool $is_active): self
+    /**
+     * @param array|string[] $roles
+     *
+     * @return $this
+     */
+    public function setRoles(array $roles = ['ROLE_USER']): self
     {
-        $this->is_active = $is_active;
+        $this->roles = $roles;
 
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getAvatar(): ?int
     {
         return $this->avatar;
     }
 
+    /**
+     * @param int|null $avatar
+     *
+     * @return $this
+     */
     public function setAvatar(?int $avatar): self
     {
         $this->avatar = $avatar;
@@ -147,59 +208,99 @@ class User
         return $this;
     }
 
-    public function getResetToken(): ?string
+    /**
+     * @return bool
+     */
+    public function getIsActive(): bool
     {
-        return $this->reset_token;
+        return $this->isActive;
     }
 
-    public function setResetToken(?string $reset_token): self
+    /**
+     * @param bool $isActive
+     *
+     * @return $this
+     */
+    public function setIsActive(bool $isActive): self
     {
-        $this->reset_token = $reset_token;
+        $this->isActive = $isActive;
 
         return $this;
     }
 
-    public function getResetTokenAt(): ?\DateTimeInterface
+    /**
+     * @return bool
+     */
+    public function isVerified(): bool
     {
-        return $this->reset_token_at;
+        return $this->isVerified;
     }
 
-    public function setResetTokenAt(?\DateTimeInterface $reset_token_at): self
+    /**
+     * @param bool $isVerified
+     *
+     * @return $this
+     */
+    public function setIsVerified(bool $isVerified): self
     {
-        $this->reset_token_at = $reset_token_at;
+        $this->isVerified = $isVerified;
 
         return $this;
     }
 
-    public function getRememberToken(): ?string
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getIsVerifiedAt(): ?\DateTimeInterface
     {
-        return $this->remember_token;
+        return $this->isVerifiedAt;
     }
 
-    public function setRememberToken(?string $remember_token): self
+    /**
+     * @param \DateTimeInterface|null $isVerifiedAt
+     *
+     * @return $this
+     */
+    public function setIsVerifiedAt(/*?\DateTimeInterface $isVerifiedAt*/): self
     {
-        $this->remember_token = $remember_token;
+        $this->isVerifiedAt = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
 
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getLastConnectionAt(): ?\DateTimeInterface
     {
         return $this->last_connection_at;
     }
 
-    public function setLastConnectionAt(?\DateTimeInterface $last_connection_at): self
+    /**
+     * @param \DateTimeInterface|null $last_connection_at
+     *
+     * @return $this
+     */
+    public function setLastConnectionAt(/*?\DateTimeInterface $last_connection_at*/): self
     {
-        $this->last_connection_at = $last_connection_at;
+        $this->last_connection_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
 
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
 
+    /**
+     * @param \DateTimeInterface $created_at
+     *
+     * @return $this
+     */
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
@@ -207,15 +308,78 @@ class User
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
     }
 
+    /**
+     * @param \DateTimeInterface $updated_at
+     *
+     * @return $this
+     */
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    public function getSalt()
+    {
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
+    /**
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize([
+            $this->id,
+            $this->username,
+            $this->email,
+            $this->password,
+            $this->roles,
+            $this->avatar,
+            $this->last_connection_at,
+            $this->created_at,
+            $this->updated_at
+        ]);
+    }
+
+    /**
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->username,
+            $this->email,
+            $this->password,
+            $this->roles,
+            $this->avatar,
+            $this->last_connection_at,
+            $this->created_at,
+            $this->updated_at
+            ) = unserialize($serialized, ['allowed_classes' => false]); // Ne pas instancier la classe
+    }
+
+    /**
+     * @param int $length
+     *
+     * @return false|string
+     */
+    private function getToken(int $length)
+    {
+        $alphabet = '0123456789azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN';
+        return substr(str_shuffle(str_repeat($alphabet, $length)), 0, $length);
     }
 }
