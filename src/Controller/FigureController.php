@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
-use App\Repository\CategoryRepository;
+use App\Entity\Category;
+use App\Entity\Figure;
+use App\Form\FigureCreationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\FigureRepository;
@@ -17,11 +20,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class FigureController extends AbstractController
 {
     /**
-     * @var CategoryRepository
-     */
-    private $categoryRepository;
-
-    /**
      * @var FigureRepository
      */
     private $repository;
@@ -32,34 +30,61 @@ class FigureController extends AbstractController
     private $entityManager;
 
     /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    /**
      * FigureController constructor.
      *
-     * @param CategoryRepository     $categoryRepository
      * @param FigureRepository       $repository
      * @param EntityManagerInterface $entityManager
-     * @param ValidatorInterface     $validator
      */
-    public function __construct(CategoryRepository $categoryRepository, FigureRepository $repository, EntityManagerInterface $entityManager, ValidatorInterface $validator)
+    public function __construct(FigureRepository $repository, EntityManagerInterface $entityManager)
     {
-        $this->categoryRepository = $categoryRepository;
         $this->repository = $repository;
         $this->entityManager = $entityManager;
-        $this->validator = $validator;
     }
 
     /**
      * @Route("/", name="index", methods={"GET"})
+     *
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
-        $categories_navbar = $this->categoryRepository->findAll();
+        $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
         $figures = $this->repository->findAll();
-        return $this->render('front/index.html.twig', ['current_menu'=>'homepage', 'categories_navbar'=>$categories_navbar, 'figures'=>$figures]);
+
+        return $this->render('figures/index.html.twig', ['current_menu'=>'index', 'categories_navbar'=>$categories_navbar, 'figures'=>$figures]);
+    }
+
+    /**
+     * @Route("/creation-figure", name="figure.create", methods={"GET","POST"})
+     * @param Request            $request
+     * @param ValidatorInterface $validator
+     *
+     * @return Response
+     */
+    public function create(Request $request, ValidatorInterface $validator): Response
+    {
+        $form = $this->createForm(FigureCreationFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $figure = (new Figure())
+                ->setIdCategory($form->get('id_category')->getData()->getId())
+                ->setName($form->get('name')->getData())
+                ->setDescription($form->get('description')->getData())
+                ->setAuthor($this->getUser()->getId());
+
+            $errors = $validator->validate($figure);
+            if (count($errors) > 0) {
+                return new Response((string) $errors, 400);
+            } else {
+                $this->entityManager->persist($figure);
+                $this->entityManager->flush();
+                $this->addFlash('success', 'La figure a été créée avec succès !');
+            }
+        }
+
+        $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
+
+        return $this->render('figures/create.html.twig', ['current_menu'=>'create_figure', 'categories_navbar'=>$categories_navbar, 'form'=>$form->createView()]);
     }
 }

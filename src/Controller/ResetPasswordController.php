@@ -52,7 +52,7 @@ class ResetPasswordController extends AbstractController
     /**
      * Display & process form to request a password reset.
      *
-     * @Route("/mot-de-passe-oublie", name="forgot_password_request")
+     * @Route("/mot-de-passe-oublie", name="forgot_password_request", methods={"GET","POST"})
      *
      * @param Request         $request
      * @param MailerInterface $mailer

@@ -1,8 +1,8 @@
 #navbarSupportedContent .nav-link { transition: color var(--transition-duration); }
 #navbarSupportedContent .nav-link:hover { color: white; }
-#navbarDropdown { cursor: pointer; }
-#navbarDropdown::after { transition: transform var(--transition-duration) ease-in-out; }
-#navbarDropdown.open::after { transform: rotate(180deg); }
+#navbarSupportedContent .nav-item.dropdown .nav-link.dropdown-toggle { cursor: pointer; }
+#navbarSupportedContent .nav-item.dropdown .nav-link.dropdown-toggle::after { transition: transform var(--transition-duration) ease-in-out; }
+#navbarSupportedContent .nav-item.dropdown .nav-link.dropdown-toggle.open::after { transform: rotate(180deg); }
 @media screen AND (min-width: 992px) {
     #navbarSupportedContent .dropdown .dropdown-menu { display: block; opacity: 0; z-index: -1; transition: opacity var(--transition-duration); }
     #navbarSupportedContent .dropdown .dropdown-menu.show { opacity: 1; z-index: 1; }

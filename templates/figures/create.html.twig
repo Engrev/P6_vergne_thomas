@@ -1,0 +1,32 @@
+{# templates/figures/create.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Création d'une figure{% endblock %}
+
+{% block body %}
+    <section id="figureCreation" class="container">
+        <h1>Création d'une figure</h1>
+
+        <div id="figureCreationForm">
+            {{ form_start(form) }}
+                <div class="form-group">
+                    {{ form_row(form.id_category) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.name) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.description) }}
+                </div>
+
+                <p class="text-danger">Tous les champs sont obligatoires.</p>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-theme btn-block bg-theme" id="btn-submit-figureCreationForm">Créer la figure</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </section>
+{% endblock %}

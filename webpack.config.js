@@ -14,9 +14,6 @@ Encore
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
-    // Fixing jQuery Plugins that Expect jQuery to be Global.
-    .autoProvidejQuery()
-
     /*
      * ENTRY CONFIG
      *
@@ -67,7 +64,7 @@ Encore
     //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
+    .autoProvidejQuery()
 
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()

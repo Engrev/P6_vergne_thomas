@@ -7,6 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
+ * Class Figure
+ * @package App\Entity
+ *
  * @ORM\Entity(repositoryClass=FigureRepository::class)
  * @ORM\Table(name="st_figures", uniqueConstraints={@ORM\UniqueConstraint(name="uniq_name", columns={"name"})})
  * @UniqueEntity(fields={"name"}, message="Une figure existe déjà avec ce nom.")
@@ -26,11 +29,6 @@ class Figure
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="id")
      */
     private $id_category;
-
-    /**
-     * @ORM\Column(type="string", length=105)
-     */
-    private $link;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -58,16 +56,36 @@ class Figure
      */
     private $updated_at;
 
+    /**
+     * Figure constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->created_at = $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
+    }
+
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return int|null
+     */
     public function getIdCategory(): ?int
     {
         return $this->id_category;
     }
 
+    /**
+     * @param int $id_category
+     *
+     * @return $this
+     */
     public function setIdCategory(int $id_category): self
     {
         $this->id_category = $id_category;
@@ -75,23 +93,19 @@ class Figure
         return $this;
     }
 
-    public function getLink(): ?string
-    {
-        return $this->link;
-    }
-
-    public function setLink(string $link): self
-    {
-        $this->link = $link;
-
-        return $this;
-    }
-
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -99,11 +113,19 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getDescription()
     {
         return $this->description;
     }
 
+    /**
+     * @param $description
+     *
+     * @return $this
+     */
     public function setDescription($description): self
     {
         $this->description = $description;
@@ -111,11 +133,19 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getAuthor(): ?int
     {
         return $this->author;
     }
 
+    /**
+     * @param int $author
+     *
+     * @return $this
+     */
     public function setAuthor(int $author): self
     {
         $this->author = $author;
@@ -123,11 +153,19 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
 
+    /**
+     * @param \DateTimeInterface $created_at
+     *
+     * @return $this
+     */
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
@@ -135,11 +173,19 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
     }
 
+    /**
+     * @param \DateTimeInterface $updated_at
+     *
+     * @return $this
+     */
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;

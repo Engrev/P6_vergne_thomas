@@ -151,7 +151,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
         }
 
         $request->getSession()->getFlashBag()->add('success', 'Vous êtes connecté.');
-        return new RedirectResponse($this->urlGenerator->generate('login'));
+        return new RedirectResponse($this->urlGenerator->generate('index'));
     }
 
     /**
