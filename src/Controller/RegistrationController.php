@@ -42,7 +42,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/inscription", name="register")
+     * @Route("/inscription", name="register", methods={"GET","POST"})
      */
     public function index(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {

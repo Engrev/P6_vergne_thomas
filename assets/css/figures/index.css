@@ -5,6 +5,8 @@
 #index main.wrap { padding: 50px 15px; }
 #index .figures-list .figure .card { box-shadow: 0 1px 2px 0 rgba(168,182,191,.6); transition: all var(--transition-duration) ease-out; }
 #index .figures-list .figure .card:hover { box-shadow: 0 10px 20px 0 rgba(168,182,191,.6); transform: translateY(-1px); }
+#index .figures-list .figure h5.card-title { cursor: pointer; display: inline-block; transition: color var(--transition-duration); }
+#index .figures-list .figure h5.card-title:hover { color: var(--theme-color); }
 #index .figures-list .figure .card .card-body a { display: inline-block; }
 #index .figures-list .figure .card .card-body .btn-edit-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f304"; color: #ffc107; }
 #index .figures-list .figure .card .card-body .btn-delete-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; color: #dc3545; }

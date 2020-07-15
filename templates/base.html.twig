@@ -25,8 +25,8 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégories</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoriesNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégories</a>
+                        <div class="dropdown-menu" aria-labelledby="categoriesNavbarDropdown">
                             {% for categorie_navbar in categories_navbar %}
                                 <a class="dropdown-item{#{{ categorie_navbar.name == category.name ? ' active' : '' }}#}" href="{{ categorie_navbar.link }}/1">
                                     {{ categorie_navbar.name }} {#<span class="text-muted font-italic">{{ number_posts[categorie_navbar.id] }}</span>#}
@@ -34,7 +34,15 @@
                             {% endfor %}
                         </div>
                     </li>
-                    {% if app.user %}
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dashboardNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tableau de bord</a>
+                            <div class="dropdown-menu" aria-labelledby="dashboardNavbarDropdown">
+                                <a class="dropdown-item{% if current_menu is defined and current_menu == 'create_figure' %} active{% endif %}" href="{{ path('figure.create') }}"><i class="fas fa-plus-square"></i> Créer une figure</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('logout') }}">Déconnexion</a>
                         </li>
@@ -57,17 +65,19 @@
         <div class="container alert-messages">
             <div class="row d-block">
                 <div class="col-xs">
-                    {% for label, messages in app.flashes('success') or app.flashes('warning') or app.flashes('danger') %}
-                        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <ul class="mb-0">
-                                {% for message in messages %}
-                                    <li>{{ message }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                    {% for label, messages in app.flashes %}
+                        {% if label in ['success', 'warning', 'danger'] %}
+                            <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <ul class="mb-0">
+                                    {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -106,6 +116,7 @@
         </footer>
 
         {% block javascripts %}
+            <script src="https://cdn.tiny.cloud/1/vayc4hsr61sa52tqfrn815obw86y3lv77fjtrjwd1a0y4kql/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </body>
