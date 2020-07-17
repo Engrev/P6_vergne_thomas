@@ -128,4 +128,27 @@ class FigureController extends AbstractController
 
         return $this->render('figures/create.html.twig', ['current_menu'=>'create_figure', 'categories_navbar'=>$categories_navbar, 'form'=>$form->createView()]);
     }
+
+    /**
+     * @Route("/ajax/figure/load", name="figure.ajax.load", methods={"POST"})
+     * @param Request $request
+     *
+     * @return bool|JsonResponse
+     */
+    public function ajaxLoad(Request $request): JsonResponse
+    {
+        $isAjax = $request->isXmlHttpRequest();
+        if ($isAjax) {
+            $encoders = [new JsonEncoder()];
+            $normalizers = [new ObjectNormalizer()];
+            $serializer = new Serializer($normalizers, $encoders);
+
+            $figure = $this->repository->findOneBy(['id' => $request->request->get('id_figure')]);
+            if (!is_null($figure)) {
+                $jsonFigure = $serializer->serialize($figure, 'json');
+                return new JsonResponse($jsonFigure);
+            }
+        }
+        return false;
+    }
 }
