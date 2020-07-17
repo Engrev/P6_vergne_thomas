@@ -58,11 +58,11 @@ class FigureController extends AbstractController
         $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
         $figures = $this->repository->findAll();
 
-        return $this->render('figures/index.html.twig', ['current_menu'=>'index', 'categories_navbar'=>$categories_navbar, 'figures'=>$figures]);
+        return $this->render('figure/index.html.twig', ['current_menu'=>'index', 'categories_navbar'=>$categories_navbar, 'figures'=>$figures]);
     }
 
     /**
-     * @Route("/creation-figure", name="figure.create", methods={"GET","POST"})
+     * @Route("/figure/creation", name="figure.create", methods={"GET","POST"})
      * @param Request            $request
      * @param ValidatorInterface $validator
      *
@@ -126,7 +126,7 @@ class FigureController extends AbstractController
 
         $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
 
-        return $this->render('figures/create.html.twig', ['current_menu'=>'create_figure', 'categories_navbar'=>$categories_navbar, 'form'=>$form->createView()]);
+        return $this->render('figure/create.html.twig', ['current_menu'=>'create_figure', 'categories_navbar'=>$categories_navbar, 'form'=>$form->createView()]);
     }
 
     /**
