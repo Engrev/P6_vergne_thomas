@@ -6,7 +6,6 @@ use App\Entity\Category;
 use App\Entity\RegistrationForm;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Repository\CategoryRepository;
 use App\Security\EmailVerifier;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
