@@ -6,7 +6,7 @@
 {% block body %}
     <section id="index">
         <header>
-            <img src="{{ asset('img/home.jpg') }}" alt="Snowtricks">
+            <img src="{{ asset('uploads/home.jpg') }}" alt="Snowtricks">
             <button type="button" id="scrollDown-to-figures"></button>
         </header>
 
@@ -19,11 +19,13 @@
                         {% if loop.index <= 15 %}
                             <article class="figure col-12 col-lg-1" id="{{ figure.id }}">
                                 <div class="card">
-                                    <img src="{{ asset('img/figures/goofy.jpg') }}" class="card-img-top" alt="{{ figure.name }}">
+                                    <img src="{{ asset('uploads/figures/goofy.jpg') }}" class="card-img-top" alt="{{ figure.name }}">
                                     <div class="card-body">
-                                        <h5 class="card-title mb-0">{{ figure.name }}</h5>
-                                        <a href="#" class="btn-figure btn-delete-figure float-right ml-3"></a>
-                                        <a href="#" class="btn-figure btn-edit-figure float-right"></a>
+                                        <h5 class="card-title mb-0">{{ figure.name }}</h5> <i class="fas fa-spinner fa-spin d-none"></i>
+                                        {% if figure.user.id == app.user.id %}
+                                            <a href="#" class="btn-figure btn-delete-figure float-right ml-3"></a>
+                                            <a href="#" class="btn-figure btn-edit-figure float-right"></a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </article>
@@ -35,11 +37,13 @@
                             {% endif %}
                                         <article class="figure col-12 col-lg-1" id="{{ figure.id }}">
                                             <div class="card">
-                                                <img src="{{ asset('img/figures/goofy.jpg') }}" class="card-img-top" alt="{{ figure.name }}">
+                                                <img src="{{ asset('uploads/figures/goofy.jpg') }}" class="card-img-top" alt="{{ figure.name }}">
                                                 <div class="card-body">
-                                                    <h5 class="card-title mb-0">{{ figure.name }}</h5>
-                                                    <a href="#" class="btn-figure btn-delete-figure float-right ml-3"></a>
-                                                    <a href="#" class="btn-figure btn-edit-figure float-right"></a>
+                                                    <h5 class="card-title mb-0">{{ figure.name }}</h5> <i class="fas fa-spinner fa-spin d-none"></i>
+                                                    {% if figure.user.id == app.user.id %}
+                                                        <a href="#" class="btn-figure btn-delete-figure float-right ml-3"></a>
+                                                        <a href="#" class="btn-figure btn-edit-figure float-right"></a>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </article>
@@ -71,16 +75,37 @@
     </section>
 
     <div class="modal fade" id="figureDetailsModal" tabindex="-1" role="dialog" aria-labelledby="figureDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="figureDetailsModalLabel">Modal title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <img src="{{ asset('uploads/figures/goofy.jpg') }}" class="img-figure-detail" alt="">
+                    <div class="row">
+                        <div class="col-12 col-md-2">
+                            <figure class="pictures-figure-detail">
+                                <img src="{{ asset('uploads/figures/goofy.jpg') }}" alt="">
+                            </figure>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <figure class="pictures-figure-detail">
+                                <img src="{{ asset('uploads/figures/goofy.jpg') }}" alt="">
+                            </figure>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <figure class="pictures-figure-detail">
+                                <img src="{{ asset('uploads/figures/goofy.jpg') }}" alt="">
+                            </figure>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <figure class="pictures-figure-detail">
+                                <img src="{{ asset('uploads/figures/goofy.jpg') }}" alt="">
+                            </figure>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

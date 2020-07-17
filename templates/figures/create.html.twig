@@ -21,7 +21,11 @@
                     {{ form_row(form.description) }}
                 </div>
 
-                <p class="text-danger">Tous les champs sont obligatoires.</p>
+                <div class="form-group">
+                    {{ form_row(form.pictures) }}
+                </div>
+
+                <p class="text-danger">Tous les champs sont obligatoires <span class="font-weight-bold">sauf les photos</span>.</p>
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-theme btn-block bg-theme" id="btn-submit-figureCreationForm">Créer la figure</button>

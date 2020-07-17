@@ -7,6 +7,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Class FigureRepository
+ * @package App\Repository
+ *
  * @method Figure|null find($id, $lockMode = null, $lockVersion = null)
  * @method Figure|null findOneBy(array $criteria, array $orderBy = null)
  * @method Figure[]    findAll()

@@ -4,14 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Figure;
+use App\Entity\File;
+use App\Entity\User;
 use App\Form\FigureCreationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class FigureController
@@ -67,19 +74,53 @@ class FigureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $category = $this->entityManager->getRepository(Category::class)->findOneBy(['id' => $form->get('id_category')->getData()->getId()]);
+            $user = $this->entityManager->getRepository(User::class)->findOneBy(['id' => $this->getUser()->getId()]);
+            // Création d'une figure
             $figure = (new Figure())
-                ->setIdCategory($form->get('id_category')->getData()->getId())
+                ->setCategory($category)
                 ->setName($form->get('name')->getData())
                 ->setDescription($form->get('description')->getData())
-                ->setAuthor($this->getUser()->getId());
+                ->setUser($user);
 
             $errors = $validator->validate($figure);
             if (count($errors) > 0) {
                 return new Response((string) $errors, 400);
             } else {
+                // Enregistrement de la figure en bdd
                 $this->entityManager->persist($figure);
                 $this->entityManager->flush();
                 $this->addFlash('success', 'La figure a été créée avec succès !');
+
+                $pictures = $form->get('pictures')->getData();
+                $path = 'uploads'.DIRECTORY_SEPARATOR.'figures'.DIRECTORY_SEPARATOR.$figure->getId();
+                if ($pictures) {
+                    foreach ($pictures as $picture) {
+                        $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
+                        $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                        $safeFilename = $safeFilename.'.'.$picture->guessExtension();
+                        $newFilename = md5(uniqid()).'.'.$picture->guessExtension();
+                        $path .= DIRECTORY_SEPARATOR.$newFilename;
+                        try {
+                            // Déplacement du fichier sur le serveur
+                            $picture->move($path, $newFilename);
+                        } catch (FileException $e) {
+                            $this->addFlash('danger', $e->getMessage());
+                            $this->redirectToRoute('figure.create');
+                        }
+                        // Création d'un fichier
+                        $file = (new File())
+                            ->setFigure($figure)
+                            ->setPath($path)
+                            ->setName($newFilename)
+                            ->setUploadedName($safeFilename);
+                        $figure->addFile($file);
+                    }
+                    // Enregistrement des photos en bdd par la figure
+                    $this->entityManager->persist($figure);
+                    $this->entityManager->flush();
+                    $this->addFlash('success', 'La/les photo(s) a/ont été envoyée(s) avec succès !');
+                }
             }
         }
 
