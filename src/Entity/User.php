@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,8 +24,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @ORM\OneToMany(targetEntity="Figure", mappedBy="author")
-     * @ORM\OneToMany(targetEntity="Message", mappedBy="id_user")
+     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="user", orphanRemoval=true)
      */
     private $id;
 
@@ -57,6 +58,11 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="integer", nullable=true, options={"unsigned"=true})
      */
     private $avatar;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $figures;
 
     /**
      * @ORM\Column(type="boolean")
@@ -94,6 +100,7 @@ class User implements UserInterface, \Serializable
     public function __construct()
     {
         $this->created_at = $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
+        $this->figures = new ArrayCollection();
     }
 
     /**
@@ -206,6 +213,47 @@ class User implements UserInterface, \Serializable
     public function setAvatar(?int $avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Figure[]
+     */
+    public function getFigures(): Collection
+    {
+        return $this->figures;
+    }
+
+    /**
+     * @param Figure $figure
+     *
+     * @return $this
+     */
+    public function addFigure(Figure $figure): self
+    {
+        if (!$this->figures->contains($figure)) {
+            $this->figures[] = $figure;
+            $figure->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Figure $figure
+     *
+     * @return $this
+     */
+    public function removeFigure(Figure $figure): self
+    {
+        if ($this->figures->contains($figure)) {
+            $this->figures->removeElement($figure);
+            // set the owning side to null (unless already changed)
+            if ($figure->getUser() === $this) {
+                $figure->setUser(null);
+            }
+        }
 
         return $this;
     }
@@ -330,10 +378,16 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
+    /**
+     * @return string|void|null
+     */
     public function getSalt()
     {
     }
 
+    /**
+     *
+     */
     public function eraseCredentials()
     {
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FigureRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -20,15 +22,15 @@ class Figure
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @ORM\OneToMany(targetEntity="Message", mappedBy="id_figure")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="id")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="figures")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $id_category;
+    private $category;
+
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -41,10 +43,15 @@ class Figure
     private $description;
 
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="id")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="figures")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $author;
+    private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity=File::class, mappedBy="figure", orphanRemoval=true, cascade={"persist"})
+     */
+    private $files;
 
     /**
      * @ORM\Column(type="datetime")
@@ -63,6 +70,7 @@ class Figure
     public function __construct()
     {
         $this->created_at = $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
+        $this->files = new ArrayCollection();
     }
 
     /**
@@ -74,21 +82,21 @@ class Figure
     }
 
     /**
-     * @return int|null
+     * @return Category|null
      */
-    public function getIdCategory(): ?int
+    public function getCategory(): ?Category
     {
-        return $this->id_category;
+        return $this->category;
     }
 
     /**
-     * @param int $id_category
+     * @param Category|null $category
      *
      * @return $this
      */
-    public function setIdCategory(int $id_category): self
+    public function setCategory(?Category $category): self
     {
-        $this->id_category = $id_category;
+        $this->category = $category;
 
         return $this;
     }
@@ -134,21 +142,62 @@ class Figure
     }
 
     /**
-     * @return int|null
+     * @return User|null
      */
-    public function getAuthor(): ?int
+    public function getUser(): ?User
     {
-        return $this->author;
+        return $this->user;
     }
 
     /**
-     * @param int $author
+     * @param User|null $user
      *
      * @return $this
      */
-    public function setAuthor(int $author): self
+    public function setUser(?User $user): self
     {
-        $this->author = $author;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|File[]
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    /**
+     * @param File $file
+     *
+     * @return $this
+     */
+    public function addFile(File $file): self
+    {
+        if (!$this->files->contains($file)) {
+            $this->files[] = $file;
+            $file->setFigure($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param File $file
+     *
+     * @return $this
+     */
+    public function removeFile(File $file): self
+    {
+        if ($this->files->contains($file)) {
+            $this->files->removeElement($file);
+            // set the owning side to null (unless already changed)
+            if ($file->setFigure() === $this) {
+                $file->setFigure(null);
+            }
+        }
 
         return $this;
     }

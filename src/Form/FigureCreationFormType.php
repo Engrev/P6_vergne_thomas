@@ -5,10 +5,12 @@ namespace App\Form;
 use App\Entity\Category;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 /**
  * Class FigureCreationFormType
@@ -35,6 +37,15 @@ class FigureCreationFormType extends AbstractType
             ])
             ->add('name', TextType::class, ['label' => 'Nom', 'attr' => ['class' => 'custom-input-theme']])
             ->add('description', TextareaType::class, ['attr' => ['class' => 'tinymce']])
+            ->add('pictures', FileType::class, [
+                'label' => 'Photos (JPG, JPEG, PNG)',
+                'attr' => [
+                    'class' => 'fileinput'
+                ],
+                'multiple' => true,
+                'mapped' => false,
+                'required' => false
+            ])
         ;
     }
 

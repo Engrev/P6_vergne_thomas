@@ -14,10 +14,6 @@ $(document).ready(function () {
     $('#collapseFiguresList').on('hide.bs.collapse', function () {
         $('#btn-show-more-figures').html('<i class="fas fa-plus"></i> Voir plus')
     });
-
-    $(document).on('click', 'h5.card-title', function () {
-        $('#figureDetailsModal').modal('show')
-    });
 });
 function scrollTo(target) {
     if (target.length) {
