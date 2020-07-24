@@ -43,6 +43,11 @@ class Figure
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $picture;
+
+    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="figures")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -126,7 +131,7 @@ class Figure
      */
     public function getDescription()
     {
-        return $this->description;
+        return !empty($this->description) ? stream_get_contents($this->description) : $this->description;
     }
 
     /**
@@ -137,6 +142,26 @@ class Figure
     public function setDescription($description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
+     * @param mixed $picture
+     *
+     * @return $this
+     */
+    public function setPicture($picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

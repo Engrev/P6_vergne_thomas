@@ -3,14 +3,15 @@
 namespace App\Form;
 
 use App\Entity\Category;
+use App\Entity\Figure;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\File;
 
 /**
  * Class FigureCreationFormType
@@ -25,7 +26,7 @@ class FigureCreationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id_category', EntityType::class, [
+            ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'label' => 'Catégorie',
                 'choice_label' => 'name',
@@ -36,8 +37,10 @@ class FigureCreationFormType extends AbstractType
                 ]
             ])
             ->add('name', TextType::class, ['label' => 'Nom', 'attr' => ['class' => 'custom-input-theme']])
-            ->add('description', TextareaType::class, ['attr' => ['class' => 'tinymce']])
-            ->add('pictures', FileType::class, [
+            ->add('description', TextareaType::class, ['attr' => ['class' => 'tinymce'], 'required' => false])
+            ->add('picture', FileType::class, ['label' => 'Image de la figure', 'attr' => ['class' => 'custom-input-theme'], 'data_class' => null])
+            ->add('original_picture', HiddenType::class, ['mapped' => false])
+            ->add('files', FileType::class, [
                 'label' => 'Photos (JPG, JPEG, PNG)',
                 'attr' => [
                     'class' => 'fileinput'
@@ -54,6 +57,8 @@ class FigureCreationFormType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'data_class' => Figure::class
+        ]);
     }
 }

@@ -24,16 +24,16 @@
                             Accueil{% if current_menu is defined and current_menu == 'index' %} <span class="sr-only">(current)</span>{% endif %}
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
+                    {#<li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="categoriesNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégories</a>
                         <div class="dropdown-menu" aria-labelledby="categoriesNavbarDropdown">
                             {% for categorie_navbar in categories_navbar %}
-                                <a class="dropdown-item{#{{ categorie_navbar.name == category.name ? ' active' : '' }}#}" href="{{ categorie_navbar.link }}/1">
-                                    {{ categorie_navbar.name }} {#<span class="text-muted font-italic">{{ number_posts[categorie_navbar.id] }}</span>#}
+                                <a class="dropdown-item#}{#{{ categorie_navbar.name == category.name ? ' active' : '' }}#}{#" href="{{ categorie_navbar.link }}/1">
+                                    {{ categorie_navbar.name }} #}{#<span class="text-muted font-italic">{{ number_posts[categorie_navbar.id] }}</span>#}{#
                                 </a>
                             {% endfor %}
                         </div>
-                    </li>
+                    </li>#}
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dashboardNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tableau de bord</a>

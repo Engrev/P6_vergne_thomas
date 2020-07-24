@@ -1,9 +1,0 @@
-#figureDetailsModal .modal-body .row { overflow: auto; }
-#figureDetailsModal .modal-body .img-figure-detail { display: block; margin: 0 auto 20px auto; }
-#figureDetailsModal .modal-body .pictures-figure-detail { padding: 10px; margin-bottom: 0; }
-#figureDetailsModal .modal-body .pictures-figure-detail img { width: 100%; }
-@media screen AND (min-width: 768px) {
-    #figureDetailsModal .modal-body .pictures-figure-detail { width: 300px; }
-}
-@media screen AND (min-width: 768px) {
-}
