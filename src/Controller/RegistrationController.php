@@ -3,20 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Entity\RegistrationForm;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
-use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 /**
@@ -42,15 +40,21 @@ class RegistrationController extends AbstractController
 
     /**
      * @Route("/inscription", name="register", methods={"GET","POST"})
+     *
+     * @param Request                      $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param EntityManagerInterface       $entityManager
+     *
+     * @return Response
+     * @throws TransportExceptionInterface
      */
-    public function index(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager): Response
     {
-        $registrationForm = new RegistrationForm();
-        $form = $this->createForm(RegistrationFormType::class, $registrationForm);
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = new User();
             $user
                 ->setUsername($form->get('username')->getData())
                 ->setEmail($form->get('email')->getData())
@@ -58,8 +62,8 @@ class RegistrationController extends AbstractController
                     $passwordEncoder->encodePassword($user, $form->get('password')->getData())
                 )
                 ->setRoles()
-                ->setLastConnectionAt()
             ;
+
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -75,12 +79,7 @@ class RegistrationController extends AbstractController
 
             $this->addFlash('success', 'Un email de confirmation vous a été envoyé.');
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+            return $this->redirectToRoute('index');
         }
 
         $categories_navbar = $entityManager->getRepository(Category::class)->findAll();
@@ -90,16 +89,24 @@ class RegistrationController extends AbstractController
 
     /**
      * @Route("/verify/email", name="verify_email")
+     *
+     * @param Request $request
+     *
+     * @return Response
      */
     public function verifyUserEmail(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['username' => $request->query->get('user')]);
+        //$request->query->remove('user');
+        $request->server->set('QUERY_STRING', str_replace('&user='.$user->getUsername(), '', $request->server->get('QUERY_STRING')));
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+            $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason());
+            $this->addFlash('danger', $exception->getReason());
 
             return $this->redirectToRoute('register');
         }

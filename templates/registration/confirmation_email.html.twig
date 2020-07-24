@@ -2,6 +2,9 @@
     <style>
         main { padding: 40px; background-color: #f5f5f5; }
         section { padding: 40px 80px; border-top: 3px solid #014cb1; border-bottom: 3px solid #25a5e4; width: 50%; margin: 0 auto; background-color: white; }
+        @media screen AND (max-width: 767px) {
+            section { width: 100%; }
+        }
         h1 { color: #014cb1; font-weight: bold; font-size: 2rem; margin-bottom: 20px; }
         p { margin-bottom: 10px; }
         a:not(.btn) { color: #014cb1; }
@@ -23,6 +26,9 @@
             text-align: center;
             border-radius: 5px;
         }
+        @media screen AND (max-width: 767px) {
+            a.btn { display: block; }
+        }
         p span { text-decoration: underline; }
         p.signature { font-weight: bold; font-style: italic; margin-top: 40px; }
     </style>
@@ -37,7 +43,7 @@
             <p>Afin de valider votre compte, merci de cliquer sur le lien ci-dessous :</p>
 
             <div class="btn-container">
-                <a href="{{ signedUrl|raw }}" class="btn">Vérifier mon adresse email</a>
+                <a href="{{ signedUrl|raw }}&user={{ username }}" class="btn">Vérifier mon adresse email</a>
             </div>
 
             <p>Attention ! Ce lien expire le <span>{{ expiresAt|date("d/m/Y \\à H:i", "Europe/Paris") }}</span>.</p>

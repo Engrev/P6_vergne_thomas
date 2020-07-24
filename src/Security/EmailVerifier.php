@@ -5,6 +5,7 @@ namespace App\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -50,7 +51,7 @@ class EmailVerifier
      * @param UserInterface  $user
      * @param TemplatedEmail $email
      *
-     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function sendEmailConfirmation(string $verifyEmailRouteName, UserInterface $user, TemplatedEmail $email): void
     {
@@ -70,6 +71,9 @@ class EmailVerifier
     }
 
     /**
+     * @param Request       $request
+     * @param UserInterface $user
+     *
      * @throws VerifyEmailExceptionInterface
      */
     public function handleEmailConfirmation(Request $request, UserInterface $user): void
@@ -80,7 +84,6 @@ class EmailVerifier
             ->setIsActive(true)
             ->setIsVerified(true)
             ->setIsVerifiedAt()
-            ->setLastConnectionAt()
         ;
 
         $this->entityManager->persist($user);
