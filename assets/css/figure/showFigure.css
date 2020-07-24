@@ -1,0 +1,24 @@
+#figureDetailsModal .modal-body .pictures-container { overflow: auto; padding: 0 16px; display: flex; }
+#figureDetailsModal .modal-body .img-figure-detail { display: block; margin: 0 auto 20px auto; max-width: 100%; }
+#figureDetailsModal .modal-body .pictures-figure-detail { display: table-cell; vertical-align: middle; position: relative; }
+#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay {
+    display: flex;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: calc(100% - 20px);
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 500ms ease;
+}
+#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay:hover { opacity: 1; }
+#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-figure { font-size: 2rem; color: white; margin: auto; }
+#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .fa-spinner { display: block; color: white; margin: auto; }
+#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-show-picture-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f06e"; }
+#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-delete-picture-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; }
+@media screen AND (min-width: 768px) {
+    #figureDetailsModal .modal-body .pictures-figure-detail img { width: 250px; margin-right: 20px; cursor: pointer; }
+}
+@media screen AND (min-width: 768px) {
+}

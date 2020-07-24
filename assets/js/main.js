@@ -36,6 +36,11 @@ $(document).ready(function () {
             removeIcon: "<i class='fas fa-trash-alt'></i> "
         });
     }
+
+    $('[data-toggle="tooltip"]').tooltip();
+    $(document).on('click', '[data-toggle="tooltip"]', function () {
+        $(this).tooltip('hide');
+    });
 });
 function backToTop(scrollTrigger) {
     var scrollTop = $(window).scrollTop();
