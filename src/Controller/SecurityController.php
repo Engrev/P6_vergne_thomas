@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Repository\CategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,18 +17,18 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
-     * @var CategoryRepository
+     * @var EntityManagerInterface
      */
-    private $categoryRepository;
+    private $entityManager;
 
     /**
      * SecurityController constructor.
      *
-     * @param CategoryRepository $categoryRepository
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->categoryRepository = $categoryRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -39,7 +41,7 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
         // get all figures categories for the navbar
-        $categories_navbar = $this->categoryRepository->findAll();
+        $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
 
         return $this->render('security/login.html.twig', ['current_menu' => 'login', 'categories_navbar' => $categories_navbar, 'last_username' => $lastUsername, 'error' => $error]);
     }
