@@ -1,5 +1,8 @@
-#figureDetailsModal .modal-body .pictures-container { overflow: auto; padding: 0 16px; display: flex; }
-#figureDetailsModal .modal-body .img-figure-detail { display: block; margin: 0 auto 20px auto; max-width: 100%; }
+#figureDetailsModal .modal-body .pictures-container { overflow: auto; display: flex; }
+#figureDetailsModal .modal-body .bg-darkness { background-color: rgba(0, 0, 0, 0.1); }
+#figureDetailsModal .modal-body .img-figure-detail { display: block; margin: 0 auto; max-width: 50%; }
+#figureDetailsModal .modal-body .figure-modal .card { border-radius: 0; }
+#figureDetailsModal .modal-body .figure-modal .card .card-body *:last-child { margin-bottom: 0; }
 #figureDetailsModal .modal-body .pictures-figure-detail { display: table-cell; vertical-align: middle; position: relative; }
 #figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay {
     display: flex;
@@ -19,6 +22,4 @@
 #figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-delete-picture-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; }
 @media screen AND (min-width: 768px) {
     #figureDetailsModal .modal-body .pictures-figure-detail img { width: 250px; margin-right: 20px; cursor: pointer; }
-}
-@media screen AND (min-width: 768px) {
 }

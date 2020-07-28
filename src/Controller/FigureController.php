@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Figure;
 use App\Entity\File;
+use App\Entity\Message;
 use App\Entity\User;
 use App\Form\FigureCreationFormType;
+use App\Helper\TimeSinceCreationTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,6 +25,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class FigureController extends AbstractController
 {
+    use TimeSinceCreationTrait;
+
     /**
      * @var FigureRepository
      */
@@ -133,10 +137,11 @@ class FigureController extends AbstractController
                         $figure->addFile($file);
                     }
                     // Enregistrement des photos en bdd par la figure
-                    $this->entityManager->persist($figure);
-                    $this->entityManager->flush();
                     $this->addFlash('success', 'La/les photo(s) a/ont été envoyée(s) avec succès !');
                 }
+                $this->entityManager->persist($figure);
+                $this->entityManager->flush();
+                $this->redirectToRoute('index');
             }
         }
 
@@ -211,6 +216,7 @@ class FigureController extends AbstractController
             // Mise à jour de la figure
             $this->entityManager->flush();
             $this->addFlash('success', 'La figure a été mise à jour avec succès !');
+            $this->redirectToRoute('index');
         }
 
         $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
@@ -221,7 +227,7 @@ class FigureController extends AbstractController
     /**
      * @Route("/ajax/figure/show", name="figure.ajax.show", methods={"POST"})
      *
-     * @param Request $request
+     * @param Request           $request
      *
      * @return bool|JsonResponse
      */
@@ -231,8 +237,10 @@ class FigureController extends AbstractController
         if ($isAjax) {
             $data = $request->request->all();
 
-            $figure = $this->repository->findOneBy(['id' => $data['id_figure']]);
-            $files = $this->entityManager->getRepository(File::class)->findBy(['figure' => $data['id_figure']]);
+            $figure = $this->repository->findOneBy(['id' => $data['figure_id']]);
+            $files = $this->entityManager->getRepository(File::class)->findBy(['figure' => $data['figure_id']]);
+            $conversation = $this->entityManager->getRepository(Message::class)->findBy(['figure' => $data['figure_id']], ['created_at' => 'DESC'], $data['limit']);
+
             if (!empty($files)) {
                 foreach ($files as $key => $file) {
                     $pictures[$key]['id'] = $file->getId();
@@ -242,8 +250,19 @@ class FigureController extends AbstractController
             } else {
                 $pictures = '';
             }
+            if (!empty($conversation)) {
+                foreach ($conversation as $key => $message) {
+                    $messages[$key]['id'] = $message->getId();
+                    $messages[$key]['content'] = $message->getContent();
+                    $messages[$key]['date'] = $this->dateSinceCreation($message->getCreatedAt()->format('Y-m-d H:i:s'));
+                    $messages[$key]['user']['username'] = $message->getUser()->getUsername();
+                    $messages[$key]['user']['avatar'] = $message->getUser()->getAvatar();
+                }
+            } else {
+                $messages = '';
+            }
+
             if (!is_null($figure)) {
-                //return new JsonResponse($figure);
                 return new JsonResponse([
                     'figure' => [
                         'id' => $figure->getId(),
@@ -254,7 +273,8 @@ class FigureController extends AbstractController
                         'updated_at' => $figure->getUpdatedAt()->format('d/m/Y à H:i'),
                         'user' => $figure->getUser()->getId()
                     ],
-                    'pictures' => $pictures
+                    'pictures' => $pictures,
+                    'messages' => $messages
                 ]);
             }
         }

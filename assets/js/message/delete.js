@@ -1,13 +1,13 @@
 $(document).ready(function () {
-    $(document).on('click', '.btn-delete-figure', function () {
+    $(document).on('click', '.btn-delete-comment-figure', function () {
         let obj = $(this);
-        let article = obj.closest('.figure');
-        let id = article.attr('id');
+        let parent = obj.parent();
+        let id = parent.attr('id').replace('comment-', '');
 
         $.confirm({
             icon: "fas fa-exclamation-triangle",
-            title: "Suppression d'une figure",
-            content: "Êtes-vous sûr de vouloir supprimer cette figure ? Cette action est irréversible !",
+            title: "Suppression d'un message",
+            content: "Êtes-vous sûr de vouloir supprimer cet message ? Cette action est irréversible !",
             columnClass: "medium",
             type: "orange",
             buttons: {
@@ -19,16 +19,23 @@ $(document).ready(function () {
                     text: "Oui",
                     btnClass: "btn-red",
                     action: function() {
-                        obj.next().removeClass('d-none');
+                        obj.siblings('.comment-figure-detail-overlay').html('<i class="fas fa-spinner fa-spin fa-3x"></i>');
+                        obj.siblings('.comment-figure-detail-overlay').css('opacity', 1);
                         obj.remove();
                         $.ajax({
-                            url: "/ajax/figure/delete/"+id,
+                            url: "/ajax/message/delete/"+id,
                             method: "DELETE",
+                            data: {message_id: id},
                             dataType: "json",
                             success: function (response, status) {
-                                article.remove();
+                                parent.addClass('animate__animated animate__fadeOut').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                    parent.remove();
+                                });
                             },
                             error: function (xhr, status, errorThrown) {
+                                parent.append(obj);
+                                obj.siblings('.comment-figure-detail-overlay').html('');
+                                obj.siblings('.comment-figure-detail-overlay').css('opacity', 0);
                                 $.alert({
                                     icon: "fas fa-exclamation-triangle",
                                     title: "Erreur !",

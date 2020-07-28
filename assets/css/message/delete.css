@@ -1,0 +1,23 @@
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal { padding: 20px 40px; position: relative; }
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal .comment-figure-detail-overlay {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 500ms ease;
+}
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal .comment-figure-detail-overlay .fa-spinner { display: block; color: white; margin: auto; }
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal .btn-comment {
+    color: #dc3545;
+    background-color: transparent;
+    border: 0;
+    position: absolute;
+    top: 50%;
+    right: 0;
+}
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal .btn-delete-comment-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; }
