@@ -95,12 +95,18 @@ class User implements UserInterface, \Serializable
     private $updated_at;
 
     /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $messages;
+
+    /**
      * User constructor.
      */
     public function __construct()
     {
         $this->created_at = $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
         $this->figures = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     /**
@@ -437,5 +443,36 @@ class User implements UserInterface, \Serializable
     {
         $alphabet = '0123456789azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN';
         return substr(str_shuffle(str_repeat($alphabet, $length)), 0, $length);
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

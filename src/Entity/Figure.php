@@ -69,6 +69,11 @@ class Figure
     private $updated_at;
 
     /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="figure", orphanRemoval=true)
+     */
+    private $messages;
+
+    /**
      * Figure constructor.
      * @throws \Exception
      */
@@ -76,6 +81,7 @@ class Figure
     {
         $this->created_at = $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
         $this->files = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     /**
@@ -131,7 +137,7 @@ class Figure
      */
     public function getDescription()
     {
-        return !empty($this->description) ? stream_get_contents($this->description) : $this->description;
+        return !empty($this->description) ? stream_get_contents($this->description) : null;
     }
 
     /**
@@ -263,6 +269,37 @@ class Figure
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setFigure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getFigure() === $this) {
+                $message->setFigure(null);
+            }
+        }
 
         return $this;
     }

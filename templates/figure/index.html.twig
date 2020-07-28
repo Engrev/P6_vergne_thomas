@@ -17,7 +17,7 @@
                         <div class="row justify-content-lg-center figures-list">
                     {% endif %}
                         {% if loop.index <= 15 %}
-                            <article class="figure col-12 col-lg-1" id="{{ figure.id }}">
+                            <article class="figure col-12 col-lg-1" id="figure-{{ figure.id }}">
                                 <div class="card">
                                     <img src="{{ asset(figure.picture) }}" class="card-img-top" alt="{{ figure.name }}">
                                     <div class="card-body">
@@ -36,7 +36,7 @@
                                 <div class="collapse" id="collapseFiguresList">
                                     <div class="row justify-content-lg-center figures-list">
                             {% endif %}
-                                        <article class="figure col-12 col-lg-1" id="{{ figure.id }}">
+                                        <article class="figure col-12 col-lg-1" id="figure-{{ figure.id }}">
                                             <div class="card">
                                                 <img src="{{ asset(figure.picture) }}" class="card-img-top" alt="{{ figure.name }}">
                                                 <div class="card-body">
@@ -90,9 +90,14 @@
                         <section class="figure-modal"></section>
 
                         <section class="figure-comments-modal">
-                            <div class="row">
-                                div.
-                            </div>
+                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                <hr>
+                                <div class="figure-comments-form-modal">
+                                    <textarea id="comment-content-modal"></textarea>
+                                    <button type="button" class="btn btn-theme btn-block mt-3" id="btn-comment-content-modal">Laisser un message <i class="fas fa-spinner fa-spin d-none"></i></button>
+                                </div>
+                            {% endif %}
+                            <hr>
                         </section>
                     </div>
                 </div>

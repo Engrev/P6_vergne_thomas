@@ -1,0 +1,11 @@
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal table { width: 100%; }
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal table tbody tr td:first-child { width: 100px; }
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal img { display: inline-block; width: 80px; height: 80px; border-radius: 50%; }
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal .comment-body {
+    display: inline-block;
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #ced4da;
+    vertical-align: top;
+}
+#figureDetailsModal .modal-body .figure-comments-modal .comment-modal .comment-body *:last-child { margin-bottom: 0; }

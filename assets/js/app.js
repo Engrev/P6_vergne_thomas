@@ -12,6 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-fileinput/css/fileinput.min.css';
 import 'jquery-confirm/dist/jquery-confirm.min.css'
 import 'malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css'
+import 'animate.css/animate.min.css'
 import '../css/fonts.css';
 import '../css/app.css';
 import '../css/navbar.css';
@@ -21,8 +22,10 @@ import '../css/reset_password/request.css';
 import '../css/reset_password/check_email.css';
 import '../css/reset_password/reset.css';
 import '../css/figure/index.css';
-import '../css/figure/createFigure.css';
-import '../css/figure/showFigure.css';
+import '../css/figure/create.css';
+import '../css/figure/show.css';
+import '../css/message/create.css';
+import '../css/message/delete.css';
 
 import '@fortawesome/fontawesome-free/js/all.min';
 import 'jquery/dist/jquery.min';
@@ -38,7 +41,10 @@ import 'malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min'
 import '../js/main';
 import '../js/navbar';
 import '../js/figure/index';
-import '../js/figure/createFigure';
-import '../js/figure/showFigure';
-import '../js/figure/deleteFigurePicture';
-import '../js/figure/deleteFigure';
+import '../js/figure/create';
+import '../js/figure/show';
+import '../js/figure/deletePicture';
+import '../js/figure/delete';
+import '../js/message/create';
+import '../js/message/loadMore';
+import '../js/message/delete';

@@ -3,6 +3,7 @@ $(document).ready(function () {
         let obj = $(this);
         let picture_id = obj.data('id');
         let parent = obj.parent();
+        let html = parent.html();
         let tr, figure;
         if (obj.hasClass('btn-danger')) {
             tr = obj.parent().parent();
@@ -32,12 +33,17 @@ $(document).ready(function () {
                             dataType: "json",
                             success: function (response, status) {
                                 if (obj.hasClass('btn-danger')) {
-                                    tr.remove();
+                                    tr.addClass('animate__animated animate__fadeOut').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                        tr.remove();
+                                    });
                                 } else {
-                                    figure.remove();
+                                    figure.addClass('animate__animated animate__fadeOut').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                        figure.remove();
+                                    });
                                 }
                             },
                             error: function (xhr, status, errorThrown) {
+                                parent.html(html);
                                 $.alert({
                                     icon: "fas fa-exclamation-triangle",
                                     title: "Erreur !",
