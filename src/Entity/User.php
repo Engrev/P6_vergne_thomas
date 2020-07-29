@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 /**
  * Class User
@@ -55,7 +56,7 @@ class User implements UserInterface, \Serializable
     private $roles = [];
 
     /**
-     * @ORM\Column(type="integer", nullable=true, options={"unsigned"=true})
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $avatar;
 
@@ -204,19 +205,19 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getAvatar(): ?int
+    public function getAvatar(): ?string
     {
         return $this->avatar;
     }
 
     /**
-     * @param int|null $avatar
+     * @param string|null $avatar
      *
      * @return $this
      */
-    public function setAvatar(?int $avatar): self
+    public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
 
@@ -373,13 +374,11 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @param \DateTimeInterface $updated_at
-     *
      * @return $this
      */
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    public function setUpdatedAt(): self
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
 
         return $this;
     }
@@ -388,15 +387,13 @@ class User implements UserInterface, \Serializable
      * @return string|void|null
      */
     public function getSalt()
-    {
-    }
+    {}
 
     /**
      *
      */
     public function eraseCredentials()
-    {
-    }
+    {}
 
     /**
      * @return string
@@ -453,6 +450,11 @@ class User implements UserInterface, \Serializable
         return $this->messages;
     }
 
+    /**
+     * @param Message $message
+     *
+     * @return $this
+     */
     public function addMessage(Message $message): self
     {
         if (!$this->messages->contains($message)) {
@@ -463,6 +465,11 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
+    /**
+     * @param Message $message
+     *
+     * @return $this
+     */
     public function removeMessage(Message $message): self
     {
         if ($this->messages->contains($message)) {

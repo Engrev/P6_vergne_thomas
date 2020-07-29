@@ -1,0 +1,77 @@
+{# templates/user/profil.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+    <section id="profil" class="container">
+        <h1>Profil</h1>
+
+        <div id="profilForm">
+            {{ form_start(form) }}
+                {% if user.avatar is not null %}
+                    <label>
+                        Avatar existant
+                        <a href="#collapseEditAvatar" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditAvatar">
+                            <i class="fas fa-user-circle"></i> Changer mon avatar
+                        </a>
+                    </label>
+                    <table class="table mb-4">
+                        <thead>
+                            <tr>
+                                <th>Aperçu</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img src="{{ asset(user.avatar) }}" alt="">
+                                </td>
+                                <td>
+                                    <a href="{{ asset(user.avatar) }}" target="_blank" class="btn btn-dark"><i class="fas fa-eye"></i> Agrandir</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {% endif %}
+
+                <div class="form-row mb-4 mb-md-5">
+                    <div class="col-12 col-md-6 mb-4 mb-md-0">
+                        {{ form_row(form.email) }}
+                    </div>
+                    <div class="col-12 col-md-6 mb-4 mb-md-0">
+                        {% if user.avatar is not null %}
+                            <div class="collapse" id="collapseEditAvatar">
+                                <div class="form-group mb-0" id="input-user-avatar">
+                                    {{ form_row(form.avatar) }}
+                                    {{ form_row(form.original_avatar) }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="form-group">
+                                {{ form_row(form.avatar) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row mb-4 mb-md-5">
+                    <div class="col-12 col-md-4 mb-4 mb-md-0">
+                        {{ form_row(form.actual_password) }}
+                    </div>
+                    <div class="col-12 col-md-4 mb-4 mb-md-0">
+                        {{ form_row(form.new_password.first) }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        {{ form_row(form.new_password.second) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-theme btn-block bg-theme">Mettre à jour</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </section>
+{% endblock %}

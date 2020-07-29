@@ -44,6 +44,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="dashboardNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tableau de bord</a>
                             <div class="dropdown-menu" aria-labelledby="dashboardNavbarDropdown">
                                 <a class="dropdown-item{% if current_menu is defined and current_menu == 'create_figure' %} active{% endif %}" href="{{ path('figure.create') }}"><i class="fas fa-plus-square"></i> Créer une figure</a>
+                                <a class="dropdown-item{% if current_menu is defined and current_menu == 'profil' %} active{% endif %}" href="{{ path('membre.profil') }}"><i class="fas fa-user"></i> Profil</a>
                             </div>
                         </li>
                         <li class="nav-item">

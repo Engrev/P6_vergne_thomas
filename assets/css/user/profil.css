@@ -1,0 +1,13 @@
+@media screen AND (min-width: 960px) {
+    #profil { height: calc(100vh - 56px); display: -ms-flexbox; display: flex; flex-direction: column; justify-content: center; }
+    #profilForm { margin: 50px 0; }
+    #profilForm form table tbody tr td img { max-width: 50%; }
+}
+@media screen AND (max-width: 959px) {
+    #profilForm form table tbody tr td img { max-width: 100%; }
+}
+#profilForm input { width: 100%; }
+#profilForm input[type=email] { height: 40px; }
+#profilForm form table tbody tr td { vertical-align: middle; }
+#profilForm form table thead tr th { width: 50%; }
+#profilForm form table tbody tr td img { display: block; margin: auto; }
