@@ -44,17 +44,12 @@ class Message
     private $created_at;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updated_at;
-
-    /**
      * Message constructor.
      * @throws \Exception
      */
     public function __construct()
     {
-        $this->created_at = $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
+        $this->created_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
     }
 
     /**
@@ -141,26 +136,6 @@ class Message
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTimeInterface|null
-     */
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updated_at;
-    }
-
-    /**
-     * @param \DateTimeInterface $updated_at
-     *
-     * @return $this
-     */
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
-    {
-        $this->updated_at = $updated_at;
 
         return $this;
     }

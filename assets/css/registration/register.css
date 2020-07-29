@@ -1,4 +1,2 @@
 #registration { text-align: center; height: calc(100vh - 56px); display: -ms-flexbox; display: flex; flex-direction: column; justify-content: center; }
 #registrationForm { margin: 50px 0; }
-#registrationForm form .form-group ul { padding-left: 0; }
-#registrationForm form .form-group ul li { color: #dc3545; list-style: none; }
