@@ -1,0 +1,7 @@
+#contact { text-align: center; height: calc(100vh - 56px); display: -ms-flexbox; display: flex; flex-direction: column; justify-content: center; }
+#contactForm { margin: 50px 0; }
+#contactForm input { width: 100%; }
+#contactForm textarea { margin: 0 auto; resize: vertical; }
+@media screen AND (min-width: 769px) {
+    #contactForm textarea { width: 75%; }
+}

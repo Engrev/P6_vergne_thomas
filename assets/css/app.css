@@ -26,8 +26,8 @@ a:hover { color: var(--theme-color); text-decoration: none; }
 .alert-messages .alert:last-child { margin-bottom: 50px; }
 form .form-group { margin-bottom: 30px; }
 form label.required::after { content: ' *'; font-weight: bold; color: red; }
-form .form-group label + input.custom-input-theme { display: block; }
-form .form-group input.custom-input-theme {
+form label + input.custom-input-theme { display: block; }
+form input.custom-input-theme {
     border: none;
     border-bottom: 2px solid #ced4da;
     padding: 6px 12px;
@@ -37,8 +37,8 @@ form .form-group input.custom-input-theme {
     background-color: transparent;
     transition: border-bottom-color 200ms ease-in-out, background-color 100ms ease-in-out;
 }
-form .form-group input.custom-input-theme:focus { border-bottom-color: var(--theme-color); background-color: white; }
-form .form-group input[type=file].custom-input-theme { height: 40px; }
+form input.custom-input-theme:focus { border-bottom-color: var(--theme-color); background-color: white; }
+form input[type=file].custom-input-theme { height: 40px; }
 footer { color: white; padding: 20px 10px; }
 footer .nom { font-family: 'Oswald', sans-serif; font-weight: bold; font-size: 2rem; margin-bottom: 20px; }
 footer h6 { font-size: 2rem; margin-bottom: 20px; }

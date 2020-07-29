@@ -24,6 +24,11 @@
                             Accueil{% if current_menu is defined and current_menu == 'index' %} <span class="sr-only">(current)</span>{% endif %}
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if current_menu is defined and current_menu == 'contact' %} active{% endif %}" href="{{ path('contact') }}">
+                            Contact{% if current_menu is defined and current_menu == 'contact' %} <span class="sr-only">(current)</span>{% endif %}
+                        </a>
+                    </li>
                     {#<li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="categoriesNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégories</a>
                         <div class="dropdown-menu" aria-labelledby="categoriesNavbarDropdown">
@@ -104,7 +109,7 @@
                         <h6>Accès</h6>
                         <ul class="acces">
                             <li><a href="mailto:local@engrev.fr"><i class="fas fa-paper-plane"></i> Nous envoyer un mail</a></li>
-                            <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+                            <li><a href="{{ path('contact') }}"><i class="fas fa-envelope"></i> Contact</a></li>
                             <li><a href="{{ path('login') }}"><i class="fas fa-sign-in-alt"></i> Se connecter</a></li>
                             <li><a href="{{ path('register') }}"><i class="fas fa-user-plus"></i> S'inscrire</a></li>
                         </ul>
