@@ -14,10 +14,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class FigureCreationFormType
+ * Class FigureCreationType
  * @package App\Form
  */
-class FigureCreationFormType extends AbstractType
+class FigureCreationType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder

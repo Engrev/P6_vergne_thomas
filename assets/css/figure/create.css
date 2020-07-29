@@ -1,5 +1,4 @@
 #figureCreationForm form .form-group input.custom-input-theme { width: 100%; }
-#figureCreationForm form .form-group input[type=file].custom-input-theme { cursor: pointer; }
 #figureCreationForm form .form-group select.custom-select { border-radius: 0; }
 #figureCreationForm form table thead tr th { width: 50%; }
 #figureCreationForm form table tbody tr td { vertical-align: middle; }

@@ -20,7 +20,9 @@
                 {% if app.request.attributes.get('_route') == 'figure.edit' %}
                     <label>
                         Image existante
-                        <a href="#collapseEditFigurePicture" class="btn btn-theme btn-sm" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigurePicture"><i class="fas fa-pen"></i> Changer l'image</a>
+                        <a href="#collapseEditFigurePicture" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigurePicture">
+                            <i class="fas fa-pen"></i> Changer l'image
+                        </a>
                     </label>
                     <table class="table">
                         <thead>
@@ -60,7 +62,7 @@
                 {% if app.request.attributes.get('_route') == 'figure.edit' %}
                     <label>
                         Photos existantes
-                        <a href="#collapseEditFigureFiles" class="btn btn-theme btn-sm" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureFiles"><i class="fas fa-plus"></i> Ajouter des photos</a>
+                        <a href="#collapseEditFigureFiles" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureFiles"><i class="fas fa-plus"></i> Ajouter des photos</a>
                     </label>
                     <table class="table">
                         <thead>

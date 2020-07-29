@@ -7,7 +7,7 @@ use App\Entity\Figure;
 use App\Entity\File;
 use App\Entity\Message;
 use App\Entity\User;
-use App\Form\FigureCreationFormType;
+use App\Form\FigureCreationType;
 use App\Helper\TimeSinceCreationTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -73,7 +73,7 @@ class FigureController extends AbstractController
     public function create(Request $request, ValidatorInterface $validator): Response
     {
         $figure = new Figure();
-        $form = $this->createForm(FigureCreationFormType::class, $figure);
+        $form = $this->createForm(FigureCreationType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -160,7 +160,7 @@ class FigureController extends AbstractController
      */
     public function edit(Request $request, Figure $figure): Response
     {
-        $form = $this->createForm(FigureCreationFormType::class, $figure);
+        $form = $this->createForm(FigureCreationType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -212,7 +212,7 @@ class FigureController extends AbstractController
                     $figure->addFile($file);
                 }
             }
-            $figure->setUpdatedAt(new \DateTime("now", new \DateTimeZone("Europe/Paris")));
+            $figure->setUpdatedAt();
             // Mise à jour de la figure
             $this->entityManager->flush();
             $this->addFlash('success', 'La figure a été mise à jour avec succès !');

@@ -262,13 +262,11 @@ class Figure
     }
 
     /**
-     * @param \DateTimeInterface $updated_at
-     *
      * @return $this
      */
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    public function setUpdatedAt(): self
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
 
         return $this;
     }
