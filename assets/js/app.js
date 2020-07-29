@@ -26,6 +26,7 @@ import '../css/figure/create.css';
 import '../css/figure/show.css';
 import '../css/message/create.css';
 import '../css/message/delete.css';
+import '../css/contact/contact.css';
 
 import '@fortawesome/fontawesome-free/js/all.min';
 import 'jquery/dist/jquery.min';
