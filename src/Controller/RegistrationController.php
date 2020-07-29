@@ -78,7 +78,6 @@ class RegistrationController extends AbstractController
             );
 
             $this->addFlash('success', 'Un email de confirmation vous a été envoyé.');
-
             return $this->redirectToRoute('index');
         }
 

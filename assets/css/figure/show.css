@@ -1,6 +1,6 @@
 #figureDetailsModal .modal-body .pictures-container { overflow: auto; display: flex; }
 #figureDetailsModal .modal-body .bg-darkness { background-color: rgba(0, 0, 0, 0.1); }
-#figureDetailsModal .modal-body .img-figure-detail { display: block; margin: 0 auto; max-width: 50%; }
+#figureDetailsModal .modal-body .figure-modal .img-figure-detail { display: block; margin: 0 auto; }
 #figureDetailsModal .modal-body .figure-modal .card { border-radius: 0; }
 #figureDetailsModal .modal-body .figure-modal .card .card-body *:last-child { margin-bottom: 0; }
 #figureDetailsModal .modal-body .pictures-figure-detail { display: table-cell; vertical-align: middle; position: relative; }
@@ -20,6 +20,12 @@
 #figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .fa-spinner { display: block; color: white; margin: auto; }
 #figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-show-picture-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f06e"; }
 #figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-delete-picture-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; }
-@media screen AND (min-width: 768px) {
+@media screen AND (min-width: 769px) {
+    #figureDetailsModal .modal-body .figure-modal .img-figure-detail { max-width: 50%; }
     #figureDetailsModal .modal-body .pictures-figure-detail img { width: 250px; margin-right: 20px; cursor: pointer; }
+}
+@media screen AND (max-width: 768px) {
+    #figureDetailsModal .modal-body .figure-modal .img-figure-detail,
+    #figureDetailsModal .modal-body .pictures-figure-detail,
+    #figureDetailsModal .modal-body .pictures-figure-detail img { width: 100%; }
 }

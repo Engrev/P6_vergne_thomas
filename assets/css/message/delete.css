@@ -21,3 +21,6 @@
     right: 0;
 }
 #figureDetailsModal .modal-body .figure-comments-modal .comment-modal .btn-delete-comment-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; }
+@media screen AND (max-width: 768px) {
+    #figureDetailsModal .modal-body .figure-comments-modal .comment-modal { padding: 20px 0; }
+}
