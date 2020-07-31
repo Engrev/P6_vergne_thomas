@@ -1,5 +1,14 @@
-# P6_vergne_thomas
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ad43497e9c3844aea1c82d1f098c6a00)](https://app.codacy.com/manual/Engrev/P6_vergne_thomas?utm_source=github.com&utm_medium=referral&utm_content=Engrev/P6_vergne_thomas&utm_campaign=Badge_Grade_Dashboard)
-
+# P6_vergne_thomas [![Codacy Badge](https://app.codacy.com/project/badge/Grade/832b806da4a0490d9fd76c101b1bdaaf)](https://www.codacy.com/manual/Engrev/P6_vergne_thomas?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Engrev/P6_vergne_thomas&amp;utm_campaign=Badge_Grade)
  
+Require :
+* Development environment
+* Apache server 2.2.31
+* PHP >= 7.2
+* MySQL 5.7.24
+
+Get started :
+* Clone the repository with : _git clone https://github.com/Engrev/P6_vergne_thomas.git_.
+* Make a _composer install_ and _yarn install_ in the project folder.
+* Modify _MAILER_DSN_ and _DATABASE_URL_ in _.env_ file.
+* Make a _php bin/console make:migration_ in the console in the projet folder to create database.
+* Go to the root of the project on your browser (the root have to redirect in the public folder of the project folder).
