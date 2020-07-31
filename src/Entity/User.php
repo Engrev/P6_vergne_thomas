@@ -383,15 +383,9 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * @return string|void|null
-     */
     public function getSalt()
     {}
 
-    /**
-     *
-     */
     public function eraseCredentials()
     {}
 
@@ -429,17 +423,6 @@ class User implements UserInterface, \Serializable
             $this->created_at,
             $this->updated_at
             ) = unserialize($serialized, ['allowed_classes' => false]); // Ne pas instancier la classe
-    }
-
-    /**
-     * @param int $length
-     *
-     * @return false|string
-     */
-    private function getToken(int $length)
-    {
-        $alphabet = '0123456789azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN';
-        return substr(str_shuffle(str_repeat($alphabet, $length)), 0, $length);
     }
 
     /**

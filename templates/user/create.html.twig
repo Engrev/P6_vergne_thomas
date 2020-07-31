@@ -1,0 +1,49 @@
+{# templates/user/create.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if app.request.attributes.get('_route') == 'admin.user.edit' %}Modification d'un utilisateur{% else %}Création d'un utilisateur{% endif %}
+{% endblock %}
+
+{% block body %}
+    <section id="userCreation" class="container">
+        {% if app.request.attributes.get('_route') == 'admin.user.edit' %}
+            <h1>Modification d'un utilisateur</h1>
+        {% else %}
+            <h1>Création d'un utilisateur</h1>
+        {% endif %}
+
+        <div id="userCreationForm"{% if app.request.attributes.get('_route') == 'admin.user.edit' %} class="user-edit" data-user-role="{{ user.roles.0 }}"{% endif %}>
+            {{ form_start(form) }}
+                <div class="form-row mb-4 mb-md-5">
+                    <div class="col-12 col-md-6 mb-4 mb-md-0">
+                        {{ form_row(form.username) }}
+                    </div>
+                    <div class="col-12 col-md-6 mb-4 mb-md-0">
+                        {{ form_row(form.email) }}
+                    </div>
+                </div>
+
+                <div class="form-row mb-4 mb-md-5">
+                    <div class="col-12 col-md-6 mb-4 mb-md-0">
+                        {{ form_row(form.password) }}
+                        {% if app.request.attributes.get('_route') == 'admin.user.edit' %}
+                            <input type="hidden" name="user_password" value="{{ user.password }}">
+                        {% endif %}
+                    </div>
+                    <div class="col-12 col-md-6 mb-4 mb-md-0">
+                        {{ form_row(form.roles) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {% if app.request.attributes.get('_route') == 'admin.user.edit' %}
+                        <button type="submit" class="btn btn-theme btn-block bg-theme">Modifier l'utilisateur</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-theme btn-block bg-theme">Créer l'utilisateur</button>
+                    {% endif %}
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </section>
+{% endblock %}

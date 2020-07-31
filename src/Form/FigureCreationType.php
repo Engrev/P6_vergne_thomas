@@ -33,7 +33,7 @@ class FigureCreationType extends AbstractType
                 'choice_value' => 'id',
                 'placeholder' => 'Choisir une catégorie',
                 'attr' => [
-                    'class' => 'custom-select'
+                    'class' => 'custom-select-theme'
                 ]
             ])
             ->add('name', TextType::class, ['label' => 'Nom', 'attr' => ['class' => 'custom-input-theme']])

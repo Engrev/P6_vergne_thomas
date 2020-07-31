@@ -1,0 +1,5 @@
+#userCreationForm form .custom-input-theme,
+#userCreationForm form .custom-select-theme { margin: 0; width: 100%; }
+@media screen AND (min-width: 769px) {
+    #userCreationForm form .custom-input-theme { margin-top: 5px; }
+}

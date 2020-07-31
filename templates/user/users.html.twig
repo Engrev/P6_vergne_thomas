@@ -1,0 +1,74 @@
+{# templates/user/users.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block body %}
+    <section id="users" class="container">
+        <h1>Utilisateurs</h1>
+
+        <a class="btn btn-theme create_user mb-3" href="{{ path('admin.user.create') }}"><i class="fas fa-user-plus"></i> Créer un utilisateur</a>
+        <table class="table table-hover table-responsive-md">
+            <thead class="thead-theme">
+                <tr>
+                    <th width="5%">ID</th>
+                    <th width="20%">Username</th>
+                    <th width="25%">Email</th>
+                    <th width="20%">Rôle</th>
+                    <th width="10%" class="text-center">Actif</th>
+                    <th width="10%" class="text-center">Vérifié</th>
+                    <th width="10%">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% for role in user.roles %}
+                                {% if role is same as('ROLE_SUPER_ADMIN') %}
+                                    <span class="badge badge-dark">{{ role }}</span>
+                                {% elseif role is same as('ROLE_ADMIN') %}
+                                    <span class="badge badge-danger">{{ role }}</span>
+                                {% elseif role is same as('ROLE_USER') %}
+                                    <span class="badge badge-warning">{{ role }}</span>
+                                {% else %}
+                                    <span class="badge badge-primary">{{ role }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="text-center">
+                            {% if user.isActive is same as(true) %}
+                                <i class="fas fa-check text-success{% if 'ROLE_SUPER_ADMIN' not in user.roles %} user-active{% endif %}"{% if 'ROLE_SUPER_ADMIN' not in user.roles %} data-state="{{ 1 ~ '#' ~ user.id }}" data-toggle="tooltip" data-placement="bottom" title="Désactiver ?"{% endif %}></i>
+                            {% else %}
+                                <i class="fas fa-times text-danger{% if 'ROLE_SUPER_ADMIN' not in user.roles %} user-active{% endif %}"{% if 'ROLE_SUPER_ADMIN' not in user.roles %} data-state="{{ 0 ~ '#' ~ user.id }}" data-toggle="tooltip" data-placement="bottom" title="Activer ?"{% endif %}></i>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if user.isVerified is same as(true) %}
+                                <i class="fas fa-check text-success"></i>
+                            {% else %}
+                                <i class="fas fa-times text-danger"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-theme dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item text-warning" href="{{ path('admin.user.edit', {id: user.id}) }}"><i class="fas fa-user-edit"></i> Modifier</a>
+                                    {% if 'ROLE_SUPER_ADMIN' not in user.roles or 'ROLE_SUPER_ADMIN' in user_connected.roles %}
+                                        <a class="dropdown-item text-danger user-delete" href="{{ path('user.ajax.delete', {id: user.id}) }}"><i class="fas fa-user-minus"></i> Supprimer</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

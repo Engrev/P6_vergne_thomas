@@ -147,14 +147,14 @@ class FigureController extends AbstractController
 
         $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
 
-        return $this->render('figure/create.html.twig', ['current_menu'=>'create_figure', 'categories_navbar'=>$categories_navbar, 'figure'=>$figure, 'form'=>$form->createView()]);
+        return $this->render('figure/create.html.twig', ['current_menu'=>'figure_create', 'categories_navbar'=>$categories_navbar, 'figure'=>$figure, 'form'=>$form->createView()]);
     }
 
     /**
      * @Route("/figure/modification/{id}", name="figure.edit", methods={"GET","POST"})
      *
      * @param Request $request
-     * @param Figure  $validator
+     * @param Figure  $figure
      *
      * @return Response
      */
@@ -221,7 +221,7 @@ class FigureController extends AbstractController
 
         $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
 
-        return $this->render('figure/edit.html.twig', ['categories_navbar'=>$categories_navbar, 'figure'=>$figure, 'form'=>$form->createView()]);
+        return $this->render('figure/create.html.twig', ['categories_navbar'=>$categories_navbar, 'figure'=>$figure, 'form'=>$form->createView()]);
     }
 
     /**
@@ -293,16 +293,20 @@ class FigureController extends AbstractController
     {
         $isAjax = $request->isXmlHttpRequest();
         if ($isAjax) {
-            $path = 'uploads'.DIRECTORY_SEPARATOR.'figures'.DIRECTORY_SEPARATOR;
-            $directory = $path.$figure->getId();
-            $this->deletePicturesDirectory($directory);
-            if (file_exists($directory)) {
-                unlink($figure->getPicture());
-            }
-            $this->entityManager->remove($figure);
-            $this->entityManager->flush();
+            $findFigure = $this->repository->find($figure->getId());
+            if ($findFigure) {
+                $path = 'uploads'.DIRECTORY_SEPARATOR.'figures'.DIRECTORY_SEPARATOR;
+                $directory = $path.$figure->getId();
+                $this->deletePicturesDirectory($directory);
+                if (file_exists($directory)) {
+                    unlink($figure->getPicture());
+                }
 
-            return new JsonResponse(['success' => true]);
+                $this->entityManager->remove($figure);
+                $this->entityManager->flush();
+
+                return new JsonResponse(['success' => true]);
+            }
         }
         return false;
     }
@@ -320,7 +324,7 @@ class FigureController extends AbstractController
         $isAjax = $request->isXmlHttpRequest();
         if ($isAjax) {
             unlink($file->getPath());
-            $file->getFigure()->setUpdatedAt(new \DateTime("now", new \DateTimeZone("Europe/Paris")));
+            $file->getFigure()->setUpdatedAt();
 
             $this->entityManager->remove($file);
             $this->entityManager->flush();

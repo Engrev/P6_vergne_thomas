@@ -1,9 +1,7 @@
-@media screen AND (min-width: 960px) {
-    #profil { height: calc(100vh - 56px); display: -ms-flexbox; display: flex; flex-direction: column; justify-content: center; }
-    #profilForm { margin: 50px 0; }
+@media screen AND (min-width: 993px) {
     #profilForm form table tbody tr td img { max-width: 50%; }
 }
-@media screen AND (max-width: 959px) {
+@media screen AND (max-width: 992px) {
     #profilForm form table tbody tr td img { max-width: 100%; }
 }
 #profilForm input { width: 100%; }
