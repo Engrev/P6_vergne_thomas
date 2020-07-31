@@ -43,8 +43,12 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dashboardNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tableau de bord</a>
                             <div class="dropdown-menu" aria-labelledby="dashboardNavbarDropdown">
-                                <a class="dropdown-item{% if current_menu is defined and current_menu == 'create_figure' %} active{% endif %}" href="{{ path('figure.create') }}"><i class="fas fa-plus-square"></i> Créer une figure</a>
+                                <a class="dropdown-item{% if current_menu is defined and current_menu == 'figure_create' %} active{% endif %}" href="{{ path('figure.create') }}"><i class="fas fa-plus-square"></i> Créer une figure</a>
                                 <a class="dropdown-item{% if current_menu is defined and current_menu == 'profil' %} active{% endif %}" href="{{ path('membre.profil') }}"><i class="fas fa-user"></i> Profil</a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item{% if current_menu is defined and current_menu == 'users' %} active{% endif %}" href="{{ path('admin.users') }}"><i class="fas fa-users"></i> Utilisateurs</a>
+                                {% endif %}
                             </div>
                         </li>
                         <li class="nav-item">

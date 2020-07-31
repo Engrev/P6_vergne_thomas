@@ -1,0 +1,9 @@
+@media screen AND (min-width: 577px) {
+    #users .create_user { float: right; }
+}
+@media screen AND (max-width: 576px) {
+    #users .create_user { width: 100%; }
+}
+#users table tbody tr td .user-active { cursor: pointer; }
+#users table tbody tr td .badge.badge-danger { background-color: #CC0033; }
+#users table tbody tr td .badge.badge-warning { color: white; background-color: #E3AD09; }
