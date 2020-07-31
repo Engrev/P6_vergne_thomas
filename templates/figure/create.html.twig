@@ -23,11 +23,11 @@
                     {{ form_row(form.name) }}
                 </div>
 
-                {% if app.request.attributes.get('_route') == 'figure.edit' %}
+                {% if app.request.attributes.get('_route') == 'figure.edit' and figure.picture is not null %}
                     <label>
                         Image existante
                         <a href="#collapseEditFigurePicture" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigurePicture">
-                            <i class="fas fa-pen"></i> Changer l'image
+                            <i class="fas fa-image"></i> Changer l'image
                         </a>
                     </label>
                     <table class="table">
@@ -68,7 +68,9 @@
                 {% if app.request.attributes.get('_route') == 'figure.edit' %}
                     <label>
                         Photos existantes
-                        <a href="#collapseEditFigureFiles" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureFiles"><i class="fas fa-plus"></i> Ajouter des photos</a>
+                        <a href="#collapseEditFigureFiles" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureFiles">
+                            <i class="fas fa-images"></i> Ajouter des photos
+                        </a>
                     </label>
                     <table class="table">
                         <thead>
@@ -79,15 +81,17 @@
                         </thead>
                         <tbody>
                             {% for picture in figure.files %}
-                                <tr>
-                                    <td>
-                                        <img src="{{ asset(picture.path) }}" alt="">
-                                    </td>
-                                    <td>
-                                        <a href="{{ asset(picture.path) }}" target="_blank" class="btn btn-dark"><i class="fas fa-eye"></i> Agrandir</a>
-                                        <button type="button" class="btn btn-danger btn-delete-picture-figure" data-id="{{ picture.id }}"><i class="fas fa-trash-alt"></i> Supprimer</button>
-                                    </td>
-                                </tr>
+                                {% if picture.path starts with 'upload' %}
+                                    <tr>
+                                        <td>
+                                            <img src="{{ asset(picture.path) }}" alt="">
+                                        </td>
+                                        <td>
+                                            <a href="{{ asset(picture.path) }}" target="_blank" class="btn btn-dark"><i class="fas fa-eye"></i> Agrandir</a>
+                                            <button type="button" class="btn btn-danger btn-delete-picture-figure" data-id="{{ picture.id }}"><i class="fas fa-trash-alt"></i> Supprimer</button>
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>
@@ -102,6 +106,84 @@
                         {{ form_row(form.files) }}
                     </div>
                 {% endif %}
+
+                <div class="d-none d-md-block">
+                    <label>
+                        Vidéo(s) existante(s)
+                        <a href="#collapseEditFigureVideosLink" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosLink">
+                            <i class="fas fa-video"></i> Ajouter une vidéo
+                        </a>
+                        <a href="#collapseEditFigureVideosCode" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosCode">
+                            <i class="fas fa-code"></i> Intégrer une vidéo
+                        </a>
+                    </label>
+                </div>
+                <div class="d-bloc d-md-none">
+                    <label class="d-block">
+                        Vidéo(s) existante(s)
+                        <a href="#collapseEditFigureVideosLink" class="btn btn-theme btn-block btn-sm mt-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosLink">
+                            <i class="fas fa-video"></i> Ajouter une vidéo
+                        </a>
+                        <a href="#collapseEditFigureVideosCode" class="btn btn-theme btn-block btn-sm mt-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosCode">
+                            <i class="fas fa-code"></i> Intégrer une vidéo
+                        </a>
+                    </label>
+                </div>
+                <table class="table table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th>Aperçu</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for video in figure.files %}
+                            {% if video.path starts with 'http' or video.path starts with '<iframe' %}
+                                <tr>
+                                    <td>
+                                        {% if video.path starts with 'http' %}
+                                            {% if video.path matches '#^https://(www\.)?youtu(\.)?be(\.com)?#' %}
+                                                <iframe src="https://www.youtube.com/embed/{{ video.name }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                            {% else %}
+                                                <iframe src="{{ video.path }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                            {% endif %}
+                                        {% elseif video.path starts with '<iframe' %}
+                                            {{ video.path|raw }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if video.path starts with 'http' %}
+                                            <a href="{{ video.path }}" target="_blank" class="btn btn-dark"><i class="fas fa-external-link-alt"></i> Ouvrir</a>
+                                        {% endif %}
+                                        <button type="button" class="btn btn-danger btn-delete-picture-figure" data-id="{{ video.id }}"><i class="fas fa-trash-alt"></i> Supprimer</button>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="collapse" id="collapseEditFigureVideosLink">
+                    <div class="form-group">
+                        <label>
+                            Lien
+                            <button type="button" class="btn btn-theme btn-sm ml-2" id="btn-add-more-videolink-figure">
+                                <i class="fas fa-plus"></i> Ajouter un lien
+                            </button>
+                        </label>
+                        <input type="text" name="figure_creation_videolink[]" class="custom-input-theme mt-2" id="figure_creation_videolink_1" placeholder="Collez le lien de la vidéo">
+                    </div>
+                </div>
+                <div class="collapse" id="collapseEditFigureVideosCode">
+                    <div class="form-group">
+                        <label>
+                            Code
+                            <button type="button" class="btn btn-theme btn-sm ml-2" id="btn-add-more-videocode-figure">
+                                <i class="fas fa-plus"></i> Ajouter un code
+                            </button>
+                        </label>
+                        <textarea class="form-control mt-2" name="figure_creation_videocode[]" id="figure_creation_videocode_1" placeholder="Collez le code de la vidéo"></textarea>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     {% if app.request.attributes.get('_route') == 'figure.edit' %}

@@ -136,9 +136,48 @@ class FigureController extends AbstractController
                             ->setUploadedName($safeFilename);
                         $figure->addFile($file);
                     }
-                    // Enregistrement des photos en bdd par la figure
                     $this->addFlash('success', 'La/les photo(s) a/ont été envoyée(s) avec succès !');
                 }
+
+                //Upload de(s) vidéo(s)
+                $videosLink = $request->request->get('figure_creation_videolink');
+                $videosCode = $request->request->get('figure_creation_videocode');
+                $videos = array_merge($videosLink, $videosCode);
+                if (!empty($videos)) {
+                    foreach ($videos as $lien) {
+                        if (!empty($lien)) {
+                            if (preg_match('#&t=[0-9]+s$#', $lien, $matches)) {
+                                $lien = str_replace($matches[0], '', $lien);
+                            }
+                            if (preg_match('#^https://www\.youtube\.com/watch\?v=[a-zA-Z0-9_]+$#', $lien)) {
+                                $videoName = explode('?v=', $lien);
+                            } elseif (preg_match('#^https://youtu\.be/[a-zA-Z0-9_]+$#', $lien)) {
+                                $videoName = explode('be/', $lien);
+                            } elseif (preg_match('#^<iframe#', $lien)) {
+                                $parts = explode(' ', $lien);
+                                foreach ($parts as $part) {
+                                    if (preg_match('#^src=#', $part)) {
+                                        $partName = str_replace('src=', '', $part);
+                                        $partName = str_replace('"', '', $partName);
+                                        $videoName = explode('embed/', $partName);
+                                    }
+                                }
+                            } else {
+                                $videoName = '';
+                            }
+                            $newVideoname = is_array($videoName) ? $videoName[1] : $videoName;
+                            // Création d'un fichier
+                            $file = (new File())
+                                ->setFigure($figure)
+                                ->setPath($lien)
+                                ->setName($newVideoname)
+                                ->setUploadedName($newVideoname);
+                            $figure->addFile($file);
+                        }
+                    }
+                }
+
+                // Enregistrement des photos en bdd par la figure
                 $this->entityManager->persist($figure);
                 $this->entityManager->flush();
                 $this->redirectToRoute('index');
@@ -168,7 +207,10 @@ class FigureController extends AbstractController
             $path = 'uploads'.DIRECTORY_SEPARATOR.'figures'.DIRECTORY_SEPARATOR.$figure->getId().DIRECTORY_SEPARATOR;
 
             // Upload de l'image principale
-            $originalPicture = str_replace('/', '', $form->get('original_picture')->getData());
+            $originalPicture = $form->get('original_picture')->getData();
+            if (!empty($originalPicture)) {
+                $originalPicture = str_replace('/', '', $originalPicture);
+            }
             $cover = $form->get('picture')->getData();
             if (!is_null($cover)) {
                 $coverNewFilename = md5(uniqid()).'.'.$cover->guessExtension();
@@ -181,7 +223,9 @@ class FigureController extends AbstractController
                     $this->redirectToRoute('figure.edit', ['id' => $figure->getId()]);
                 }
                 // Remplacement de l'image principale
-                unlink($originalPicture);
+                if (!empty($originalPicture)) {
+                    unlink($originalPicture);
+                }
                 $figure->setPicture($coverPath);
             } else {
                 $figure->setPicture($originalPicture);
@@ -212,6 +256,45 @@ class FigureController extends AbstractController
                     $figure->addFile($file);
                 }
             }
+
+            //Upload de(s) vidéo(s)
+            $videosLink = $request->request->get('figure_creation_videolink');
+            $videosCode = $request->request->get('figure_creation_videocode');
+            $videos = array_merge($videosLink, $videosCode);
+            if (!empty($videos)) {
+                foreach ($videos as $lien) {
+                    if (!empty($lien)) {
+                        if (preg_match('#&t=[0-9]+s$#', $lien, $matches)) {
+                            $lien = str_replace($matches[0], '', $lien);
+                        }
+                        if (preg_match('#^https://www\.youtube\.com/watch\?v=[a-zA-Z0-9_]+$#', $lien)) {
+                            $videoName = explode('?v=', $lien);
+                        } elseif (preg_match('#^https://youtu\.be/[a-zA-Z0-9_]+$#', $lien)) {
+                            $videoName = explode('be/', $lien);
+                        } elseif (preg_match('#^<iframe#', $lien)) {
+                            $parts = explode(' ', $lien);
+                            foreach ($parts as $part) {
+                                if (preg_match('#^src=#', $part)) {
+                                    $partName = str_replace('src=', '', $part);
+                                    $partName = str_replace('"', '', $partName);
+                                    $videoName = explode('embed/', $partName);
+                                }
+                            }
+                        } else {
+                            $videoName = '';
+                        }
+                        $newVideoname = is_array($videoName) ? $videoName[1] : $videoName;
+                        // Création d'un fichier
+                        $file = (new File())
+                            ->setFigure($figure)
+                            ->setPath($lien)
+                            ->setName($newVideoname)
+                            ->setUploadedName($newVideoname);
+                        $figure->addFile($file);
+                    }
+                }
+            }
+
             $figure->setUpdatedAt();
             // Mise à jour de la figure
             $this->entityManager->flush();
@@ -271,7 +354,8 @@ class FigureController extends AbstractController
                         'cover' => $figure->getPicture(),
                         'created_at' => $figure->getCreatedAt()->format('d/m/Y à H:i'),
                         'updated_at' => $figure->getUpdatedAt()->format('d/m/Y à H:i'),
-                        'user' => $figure->getUser()->getId()
+                        'user' => $figure->getUser()->getId(),
+                        'categorie' => $figure->getCategory()->getName()
                     ],
                     'pictures' => $pictures,
                     'messages' => $messages
@@ -323,7 +407,9 @@ class FigureController extends AbstractController
     {
         $isAjax = $request->isXmlHttpRequest();
         if ($isAjax) {
-            unlink($file->getPath());
+            if (file_exists($file->getPath())) {
+                unlink($file->getPath());
+            }
             $file->getFigure()->setUpdatedAt();
 
             $this->entityManager->remove($file);

@@ -30,14 +30,26 @@ $(document).ready(function () {
                 let pictures = '';
                 if (response.pictures !== '') {
                     $.each(response.pictures, function (key, picture) {
-                        pictures +=
-                            '<figure class="pictures-figure-detail" id="picture-'+picture.id+'">' +
-                                '<img src="'+picture.path+'" alt="'+picture.uploaded_name+'">' +
-                                '<div class="pictures-figure-detail-overlay">' +
-                                    '<button type="button" class="btn-figure btn-show-picture-figure" data-href="'+picture.path+'" data-toggle="tooltip" data-placement="bottom" title="Agrandir"></button>' +
-                                    '<button type="button" class="btn-figure btn-delete-picture-figure" data-id="'+picture.id+'" data-toggle="tooltip" data-placement="bottom" title="Supprimer"></button>' +
-                                '</div>' +
-                            '</figure>'
+                        if (picture.path.match(/^uploads/)) {
+                            pictures +=
+                                '<figure class="pictures-figure-detail" id="picture-'+picture.id+'">' +
+                                    '<img src="'+picture.path+'" alt="'+picture.uploaded_name+'">' +
+                                    '<div class="pictures-figure-detail-overlay">' +
+                                        '<button type="button" class="btn-figure btn-show-picture-figure" data-href="'+picture.path+'" data-toggle="tooltip" data-placement="bottom" title="Agrandir"></button>' +
+                                        '<button type="button" class="btn-figure btn-delete-picture-figure" data-id="'+picture.id+'" data-toggle="tooltip" data-placement="bottom" title="Supprimer"></button>' +
+                                    '</div>' +
+                                '</figure>'
+                        } else if (picture.path.match(/^http/)) {
+                            pictures +=
+                                '<figure class="pictures-figure-detail" id="picture-'+picture.id+'">' +
+                                    '<iframe src="'+picture.path+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
+                                '</figure>'
+                        } else if (picture.path.match(/^<iframe/)) {
+                            pictures +=
+                                '<figure class="pictures-figure-detail" id="picture-'+picture.id+'">' +
+                                    picture.path +
+                                '</figure>'
+                        }
                     });
                 }
 
@@ -77,14 +89,30 @@ $(document).ready(function () {
                                  '</span>';
                 }
 
+                let rotation = '';
+                if ($.inArray(response.figure.name, ['180','360','540','720','900','1080'])) {
+                    rotation = ' rotations rotation-'+response.figure.name;
+                }
+
                 $('#figureDetailsModal .modal-header .modal-title').html(response.figure.name + modal_title);
 
                 $('#figureDetailsModal .modal-body .figure-modal').html(
-                    '<img src="'+response.figure.cover+'" class="img-figure-detail" alt="'+response.figure.name+'">' +
+                    '<img src="'+response.figure.cover+'" class="img-figure-detail'+rotation+'" alt="'+response.figure.name+'">' +
 
-                    '<div class="row bg-darkness my-4 p-3">' +
+                    '<div class="row bg-darkness my-4 p-3 d-none d-md-flex">' +
                         '<div class="pictures-container mCustomScrollbar">' +
                             pictures +
+                        '</div>' +
+                    '</div>' +
+
+                    '<button type="button" class="btn btn-theme d-block mx-auto d-md-none" id="btnCollapseFigureMediasDetail" data-toggle="collapse" data-target="#collapseFigureMediasDetail" aria-expanded="false" aria-controls="collapseFigureMediasDetail">' +
+                        '<i class="fas fa-photo-video"></i> Voir les photos et vidéos' +
+                    '</button>' +
+                    '<div class="collapse" id="collapseFigureMediasDetail">' +
+                        '<div class="row bg-darkness my-4 p-3">' +
+                            '<div class="pictures-container mCustomScrollbar">' +
+                                pictures +
+                            '</div>' +
                         '</div>' +
                     '</div>' +
 
@@ -101,8 +129,11 @@ $(document).ready(function () {
                     '<div class="row">' +
                         '<div class="col-12">' +
                             '<p class="text-center mt-3 mb-0">' +
+                                '<span class="created-figure-detail" data-toggle="tooltip" data-placement="bottom" title="Catégorie">' +
+                                    '<i class="fas fa-tag"></i> '+response.figure.categorie +
+                                '</span>' +
                                 '<span class="created-figure-detail" data-toggle="tooltip" data-placement="bottom" title="Créée le">' +
-                                    '<i class="fas fa-clock"></i> '+response.figure.created_at +
+                                    ' <i class="fas fa-clock"></i> '+response.figure.created_at +
                                 '</span>' +
                                 updated_at +
                             '</p>' +

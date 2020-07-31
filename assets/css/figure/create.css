@@ -2,9 +2,12 @@
 #figureCreationForm form table thead tr th { width: 50%; }
 #figureCreationForm form table tbody tr td { vertical-align: middle; }
 #figureCreationForm form table tbody tr td img { display: block; margin: auto; }
+#figureCreationForm form table tbody tr td iframe { width: 100%; }
 @media screen AND (min-width: 960px) {
     #figureCreationForm form table tbody tr td img { max-width: 50%; }
+    #figureCreationForm form table tbody tr td iframe { height: 300px; }
 }
 @media screen AND (max-width: 959px) {
     #figureCreationForm form table tbody tr td img { max-width: 100%; }
+    #figureCreationForm form table tbody tr td iframe { height: auto; }
 }

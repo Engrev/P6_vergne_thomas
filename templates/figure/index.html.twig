@@ -18,8 +18,11 @@
                     {% endif %}
                         {% if loop.index <= 15 %}
                             <article class="figure col-12 col-lg-1" id="figure-{{ figure.id }}">
-                                <div class="card">
-                                    <img src="{{ asset(figure.picture) }}" class="card-img-top" alt="{{ figure.name }}">
+                                <div class="card{% if figure.id in [10,11,12,13,14,15] %} rotations{% endif %}">
+                                    <img src="{% if figure.picture is not null %}{{ asset(figure.picture) }}{% endif %}"
+                                         class="card-img-top{% if figure.name in ['180','360','540','720','900','1080'] %} rotations rotation-{{ figure.name }}{% endif %}"
+                                         alt="{{ figure.name }}"
+                                    >
                                     <div class="card-body">
                                         <h5 class="card-title mb-0"{% if app.user.id is defined %} data-user="{{ app.user.id }}"{% endif %}>{{ figure.name }}</h5> <i class="fas fa-spinner fa-spin d-none"></i>
                                         {% if app.user.id is defined and figure.user.id == app.user.id %}
@@ -38,7 +41,10 @@
                             {% endif %}
                                         <article class="figure col-12 col-lg-1" id="figure-{{ figure.id }}">
                                             <div class="card">
-                                                <img src="{{ asset(figure.picture) }}" class="card-img-top" alt="{{ figure.name }}">
+                                                <img src="{% if figure.picture is not null %}{{ asset(figure.picture) }}{% endif %}"
+                                                     class="card-img-top{% if figure.name in ['180','360','540','720','900','1080'] %} rotations rotation-{{ figure.name }}{% endif %}"
+                                                     alt="{{ figure.name }}"
+                                                >
                                                 <div class="card-body">
                                                     <h5 class="card-title mb-0"{% if app.user.id is defined %} data-user="{{ app.user.id }}"{% endif %}>{{ figure.name }}</h5> <i class="fas fa-spinner fa-spin d-none"></i>
                                                     {% if app.user.id is defined and figure.user.id == app.user.id %}

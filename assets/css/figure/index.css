@@ -3,9 +3,11 @@
 #scrollDown-to-figures::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f078"; color: white; }
 #scrollDown-to-figures { width: 40px; height: 40px; background-color: var(--theme-color); border: 0; position: absolute; }
 #index main.wrap { padding: 50px 15px; }
-#index .figures-list .figure .card { box-shadow: 0 1px 2px 0 rgba(168,182,191,.6); transition: all var(--transition-duration) ease-out; max-height: 330px; }
+#index .figures-list .figure .card { box-shadow: 0 1px 2px 0 rgba(168,182,191,.6); transition: all var(--transition-duration) ease-out; max-height: 250px; }
+#index .figures-list .figure .card.rotations { padding-top: 20px; }
 #index .figures-list .figure .card:hover { box-shadow: 0 10px 20px 0 rgba(168,182,191,.6); transform: translateY(-1px); }
-#index .figures-list .figure .card .card-img-top { max-height: calc(330px - 67.5px); max-width: max-content; }
+#index .figures-list .figure .card .card-img-top { max-height: calc(250px - 67.5px); max-width: max-content; margin: auto; }
+#index .figures-list .figure .card .card-img-top.rotations { width: calc(250px - 67.5px - 30px); }
 #index .figures-list .figure h5.card-title { cursor: pointer; display: inline-block; transition: color var(--transition-duration); }
 #index .figures-list .figure h5.card-title:hover { color: var(--theme-color); }
 #index .btn-figure { background-color: transparent; border: 0; padding: 0; }
@@ -27,3 +29,34 @@
     #index main.wrap { padding: 50px 0; }
     #index .figures-list .figure { display: block; width: 100%; margin-bottom: 20px; }
 }
+
+@keyframes rotation-180 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(180deg); }
+}
+@keyframes rotation-360 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@keyframes rotation-540 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(540deg); }
+}
+@keyframes rotation-720 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(720deg); }
+}
+@keyframes rotation-900 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(900deg); }
+}
+@keyframes rotation-1080 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(1080deg); }
+}
+.rotation-180 { animation: rotation-180 2s ease-in-out infinite; }
+.rotation-360 { animation: rotation-360 4s ease-in-out infinite; }
+.rotation-540 { animation: rotation-540 6s ease-in-out infinite; }
+.rotation-720 { animation: rotation-720 8s ease-in-out infinite; }
+.rotation-900 { animation: rotation-900 10s ease-in-out infinite; }
+.rotation-1080 { animation: rotation-1080 12s ease-in-out infinite; }
