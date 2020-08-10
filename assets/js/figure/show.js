@@ -133,7 +133,7 @@ $(document).ready(function () {
                                     '<i class="fas fa-tag"></i> '+response.figure.categorie +
                                 '</span>' +
                                 '<span class="created-figure-detail" data-toggle="tooltip" data-placement="bottom" title="Créée le">' +
-                                    ' <i class="fas fa-clock"></i> '+response.figure.created_at +
+                                    ' | <i class="fas fa-clock"></i> '+response.figure.created_at +
                                 '</span>' +
                                 updated_at +
                             '</p>' +
@@ -161,7 +161,7 @@ $(document).ready(function () {
                 $('#figureDetailsModal .modal-body .alert').removeClass('d-none');
             },
             complete: function () {
-                if (window.navigator.appVersion.indexOf('Chrome') === -1) {
+                if ($('#comment-content-modal').length) {
                     tinymce.get('comment-content-modal').setContent('');
                 }
                 $('#btn-comment-content-modal').attr('data-figure-id', id);
