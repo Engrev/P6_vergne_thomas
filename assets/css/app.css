@@ -13,7 +13,7 @@ a { color: black; transition: color var(--transition-duration); }
 a:hover { color: var(--theme-color); text-decoration: none; }
 table thead.thead-theme { background-color: var(--theme-color); color: white; }
 .btn-theme { color: white; background-color: var(--theme-color); border-color: var(--theme-color); }
-.btn-theme:hover { color: white; box-shadow: 0 0 0 .2rem var(--theme-color-alpha); }
+.btn-theme:hover { color: white; box-shadow: 0 0 0 0.2rem var(--theme-color-alpha); }
 .btn, form .form-control { border-radius: 0; }
 .btn.bg-theme { border: none; }
 .bg-theme {
