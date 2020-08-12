@@ -146,7 +146,7 @@ class FigureController extends AbstractController
                 if (!empty($videos)) {
                     foreach ($videos as $lien) {
                         if (!empty($lien)) {
-                            if (preg_match('#&t=[0-9]+s$#', $lien, $matches)) {
+                            if (preg_match('#&t=[0-9]+s$#', $lien, $matches) || preg_match('#&feature=youtu\.be$#', $lien, $matches)) {
                                 $lien = str_replace($matches[0], '', $lien);
                             }
                             if (preg_match('#^https://www\.youtube\.com/watch\?v=[a-zA-Z0-9_]+$#', $lien)) {
@@ -169,7 +169,7 @@ class FigureController extends AbstractController
                             // Création d'un fichier
                             $file = (new File())
                                 ->setFigure($figure)
-                                ->setPath($lien)
+                                ->setPath('https://www.youtube.com/embed/'.$newVideoname)
                                 ->setName($newVideoname)
                                 ->setUploadedName($newVideoname);
                             $figure->addFile($file);
@@ -264,7 +264,7 @@ class FigureController extends AbstractController
             if (!empty($videos)) {
                 foreach ($videos as $lien) {
                     if (!empty($lien)) {
-                        if (preg_match('#&t=[0-9]+s$#', $lien, $matches)) {
+                        if (preg_match('#&t=[0-9]+s$#', $lien, $matches) || preg_match('#&feature=youtu\.be$#', $lien, $matches)) {
                             $lien = str_replace($matches[0], '', $lien);
                         }
                         if (preg_match('#^https://www\.youtube\.com/watch\?v=[a-zA-Z0-9_]+$#', $lien)) {
@@ -287,7 +287,7 @@ class FigureController extends AbstractController
                         // Création d'un fichier
                         $file = (new File())
                             ->setFigure($figure)
-                            ->setPath($lien)
+                            ->setPath('https://www.youtube.com/embed/'.$newVideoname)
                             ->setName($newVideoname)
                             ->setUploadedName($newVideoname);
                         $figure->addFile($file);

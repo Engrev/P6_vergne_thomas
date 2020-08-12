@@ -68,7 +68,7 @@
                 {% if app.request.attributes.get('_route') == 'figure.edit' %}
                     <label>
                         Photos existantes
-                        <a href="#collapseEditFigureFiles" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureFiles">
+                        <a href="#collapseEditFigureFiles" class="btn btn-theme btn-sm btn-add-picture ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureFiles">
                             <i class="fas fa-images"></i> Ajouter des photos
                         </a>
                     </label>
@@ -110,10 +110,10 @@
                 <div class="d-none d-md-block">
                     <label>
                         Vidéo(s) existante(s)
-                        <a href="#collapseEditFigureVideosLink" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosLink">
+                        <a href="#collapseEditFigureVideosLink" class="btn btn-theme btn-sm btn-add-video ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosLink">
                             <i class="fas fa-video"></i> Ajouter une vidéo
                         </a>
-                        <a href="#collapseEditFigureVideosCode" class="btn btn-theme btn-sm ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosCode">
+                        <a href="#collapseEditFigureVideosCode" class="btn btn-theme btn-sm btn-add-video ml-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosCode">
                             <i class="fas fa-code"></i> Intégrer une vidéo
                         </a>
                     </label>
@@ -121,10 +121,10 @@
                 <div class="d-bloc d-md-none">
                     <label class="d-block">
                         Vidéo(s) existante(s)
-                        <a href="#collapseEditFigureVideosLink" class="btn btn-theme btn-block btn-sm mt-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosLink">
+                        <a href="#collapseEditFigureVideosLink" class="btn btn-theme btn-block btn-sm btn-add-video mt-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosLink">
                             <i class="fas fa-video"></i> Ajouter une vidéo
                         </a>
-                        <a href="#collapseEditFigureVideosCode" class="btn btn-theme btn-block btn-sm mt-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosCode">
+                        <a href="#collapseEditFigureVideosCode" class="btn btn-theme btn-block btn-sm btn-add-video mt-2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseEditFigureVideosCode">
                             <i class="fas fa-code"></i> Intégrer une vidéo
                         </a>
                     </label>
@@ -141,7 +141,7 @@
                             {% if video.path starts with 'http' or video.path starts with '<iframe' %}
                                 <tr>
                                     <td>
-                                        {% if video.path starts with 'http' %}
+                                        {#{% if video.path starts with 'http' %}
                                             {% if video.path matches '#^https://(www\.)?youtu(\.)?be(\.com)?#' %}
                                                 <iframe src="https://www.youtube.com/embed/{{ video.name }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                             {% else %}
@@ -149,12 +149,14 @@
                                             {% endif %}
                                         {% elseif video.path starts with '<iframe' %}
                                             {{ video.path|raw }}
-                                        {% endif %}
+                                        {% endif %}#}
+                                        <iframe src="{{ video.path }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     </td>
                                     <td>
-                                        {% if video.path starts with 'http' %}
+                                        {#{% if video.path starts with 'http' %}
                                             <a href="{{ video.path }}" target="_blank" class="btn btn-dark"><i class="fas fa-external-link-alt"></i> Ouvrir</a>
-                                        {% endif %}
+                                        {% endif %}#}
+                                        <a href="{{ video.path }}" target="_blank" class="btn btn-dark"><i class="fas fa-external-link-alt"></i> Ouvrir</a>
                                         <button type="button" class="btn btn-danger btn-delete-picture-figure" data-id="{{ video.id }}"><i class="fas fa-trash-alt"></i> Supprimer</button>
                                     </td>
                                 </tr>

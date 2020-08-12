@@ -44,12 +44,12 @@ $(document).ready(function () {
                                 '<figure class="pictures-figure-detail" id="picture-'+picture.id+'">' +
                                     '<iframe src="'+picture.path+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
                                 '</figure>'
-                        } else if (picture.path.match(/^<iframe/)) {
+                        }/* else if (picture.path.match(/^<iframe/)) {
                             pictures +=
                                 '<figure class="pictures-figure-detail" id="picture-'+picture.id+'">' +
                                     picture.path +
                                 '</figure>'
-                        }
+                        }*/
                     });
                 }
 

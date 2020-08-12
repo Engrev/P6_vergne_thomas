@@ -23,4 +23,18 @@ $(document).ready(function () {
         let one_more_textarea = nb_textarea+1;
         obj.parent().parent().append('<textarea class="form-control mt-2" name="figure_creation_videocode[]" id="figure_creation_videocode_'+one_more_textarea+'" placeholder="Collez le code de la vidéo"></textarea>');
     });
+
+    $(document).on('click', '.btn-add-picture', function () {
+        scrollTo($('#collapseEditFigureFiles'));
+    });
+    $(document).on('click', '.btn-add-video', function () {
+        scrollTo($('#collapseEditFigureVideosLink'));
+    });
 });
+function scrollTo(target) {
+    if (target.length) {
+        $('html, body').stop().animate({
+            scrollTop: target.offset().top
+        }, 500);
+    }
+}
