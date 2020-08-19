@@ -3,9 +3,11 @@ $(document).ready(function () {
         let obj = $(this);
         let parent = obj.parent();
         let article, id;
+        // Si, dans la page d'accueil
         if (parent.hasClass('card-body')) {
             article = obj.closest('.figure');
             id = article.attr('id').replace('figure-', '');
+        // Sinon, dans la page de visualisation d'une figure
         } else {
             id = obj.data('figure-id');
         }
@@ -37,10 +39,7 @@ $(document).ready(function () {
                                         article.remove();
                                     });
                                 } else {
-                                    $('#figureDetailsModal').modal('hide');
-                                    $('#figure-'+id).addClass('animate__animated animate__fadeOut').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-                                        $('#figure-'+id).remove();
-                                    });
+                                    document.location.href='/';
                                 }
                             },
                             error: function (xhr, status, errorThrown) {

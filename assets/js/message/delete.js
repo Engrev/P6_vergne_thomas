@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $(document).on('click', '.btn-delete-comment-figure', function () {
         let obj = $(this);
+        let section = obj.closest('.figure-comments-modal');
         let parent = obj.parent();
         let id = parent.attr('id').replace('comment-', '');
 
@@ -48,6 +49,11 @@ $(document).ready(function () {
                                         }
                                     }
                                 });
+                            },
+                            complete: function () {
+                                if (section.children('article').length == 1) {
+                                    section.append('<p class="mb-0 text-center no-message">Aucun message.</p>');
+                                }
                             }
                         });
                     }

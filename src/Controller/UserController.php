@@ -87,7 +87,7 @@ class UserController extends AbstractController
                 } catch (FileException $e) {
                     $error = true;
                     $this->addFlash('danger', $e->getMessage());
-                    $this->redirectToRoute('membre.profil');
+                    return $this->redirectToRoute('membre.profil');
                 }
                 // Remplacement de l'avatar
                 if (!empty($originalAvatar)) {
@@ -112,12 +112,12 @@ class UserController extends AbstractController
                     } else {
                         $error = true;
                         $this->addFlash('danger', 'Le nouveau mot de passe n\'a pas été confirmé');
-                        $this->redirectToRoute('membre.profil');
+                        return $this->redirectToRoute('membre.profil');
                     }
                 } else {
                     $error = true;
                     $this->addFlash('danger', 'Le mot de passe actuel est incorrect');
-                    $this->redirectToRoute('membre.profil');
+                    return $this->redirectToRoute('membre.profil');
                 }
             }
 
@@ -126,7 +126,7 @@ class UserController extends AbstractController
                 // Mise à jour de l'utilisateur
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Vos informations ont été mise à jour avec succès !');
-                $this->redirectToRoute('membre.profil');
+                return $this->redirectToRoute('membre.profil');
             }
         }
 
@@ -185,7 +185,7 @@ class UserController extends AbstractController
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
                 $this->addFlash('success', 'L\'utilisateur '.$user->getUsername().' a été créée avec succès !');
-                $this->redirectToRoute('admin.users');
+                return $this->redirectToRoute('admin.users');
             }
         }
 
@@ -209,9 +209,11 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setUsername($form->get('username')->getData());
-            $user->setEmail($form->get('email')->getData());
-            $user->setRoles([$form->get('roles')->getData()]);
+            $user
+                ->setUsername($form->get('username')->getData())
+                ->setEmail($form->get('email')->getData())
+                ->setRoles([$form->get('roles')->getData()])
+            ;
 
             $password = $form->get('password')->getData();
             if ($password !== 'nopassword') {
@@ -226,7 +228,7 @@ class UserController extends AbstractController
             // Mise à jour de la figure
             $this->entityManager->flush();
             $this->addFlash('success', 'L\'utilisateur '.$user->getUsername().' a été mis à jour avec succès !');
-            $this->redirectToRoute('admin.users');
+            return $this->redirectToRoute('admin.users');
         }
 
         $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();

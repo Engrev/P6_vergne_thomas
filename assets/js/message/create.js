@@ -13,6 +13,7 @@ $(document).ready(function () {
             success: function (response, status) {
                 tinymce.activeEditor.setContent('');
                 obj.children('.fa-spinner').addClass('d-none');
+                obj.parent().siblings('.no-message').remove();
                 obj.parent().next().after(
                     '<article class="comment-modal animate__animated animate__fadeIn" id="comment-'+response.message.id+'">' +
                         '<div class="comment-figure-detail-overlay"></div>' +
@@ -20,7 +21,7 @@ $(document).ready(function () {
                             '<tbody>' +
                                 '<tr>' +
                                     '<td>' +
-                                        '<img src="'+response.message.user.avatar+'" alt="Photo de profil">' +
+                                        '<img src="/'+response.message.user.avatar+'" alt="Photo de profil">' +
                                     '</td>' +
                                     '<td>' +
                                         '<p class="text-muted mb-0">'+response.message.user.username+' &bull; A l\'instant</p>' +

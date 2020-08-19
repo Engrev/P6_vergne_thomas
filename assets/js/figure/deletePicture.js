@@ -5,8 +5,10 @@ $(document).ready(function () {
         let parent = obj.parent();
         let html = parent.html();
         let tr, figure;
+        // Si, dans la page de modification
         if (obj.hasClass('btn-danger')) {
             tr = obj.parent().parent();
+        // Sinon, dans la page de visualisation d'une figure
         } else {
             figure = obj.closest('.pictures-figure-detail');
         }
@@ -26,16 +28,19 @@ $(document).ready(function () {
                     text: "Oui",
                     btnClass: "btn-red",
                     action: function() {
+                        obj.parent().css('opacity', 1);
                         parent.html('<i class="fas fa-spinner fa-spin fa-3x"></i>');
                         $.ajax({
                             url: "/ajax/picture/delete/"+picture_id,
                             method: "DELETE",
                             dataType: "json",
                             success: function (response, status) {
+                                // Si, dans la page de modification
                                 if (obj.hasClass('btn-danger')) {
                                     tr.addClass('animate__animated animate__fadeOut').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                                         tr.remove();
                                     });
+                                // Sinon, dans la page de visualisation d'une figure
                                 } else {
                                     figure.addClass('animate__animated animate__fadeOut').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                                         figure.remove();

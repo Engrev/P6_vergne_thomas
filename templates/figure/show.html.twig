@@ -1,0 +1,166 @@
+{# templates/figures/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ figure.name }}{% endblock %}
+
+{% block body %}
+    <section id="figureShow" class="container">
+        {% if figure is not defined %}
+            <div class="alert alert-danger mb-0" role="alert">La figure n'a pas été trouvée.</div>
+        {% else %}
+            <div class="modal fade" id="figureDetailsModal" data-redirect-on-close="{{ path('index') }}" tabindex="-1" role="dialog" aria-labelledby="figureDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                {{ figure.name }}
+                                {% if app.user.id is defined and figure.user.id == app.user.id %}
+                                    <a href="{{ path('figure.edit', {id: figure.id}) }}" class="btn-figure btn-edit-figure mx-3" data-toggle="tooltip" data-placement="bottom" title="Modifier"></a>
+                                    <button type="button" class="btn-figure btn-delete-figure" data-figure-id="{{ figure.id }}" data-toggle="tooltip" data-placement="bottom" title="Supprimer"></button>
+                                    <i class="fas fa-spinner fa-spin d-none"></i>
+                                {% endif %}
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <section class="figure-modal">
+                                <img src="{{ asset(figure.picture) }}" class="img-figure-detail{% if figure.name in ['180','360','540','720','900','1080'] %} rotations rotation-{{ figure.name }}{% endif %}" alt="{{ figure.name }}">
+
+                                <div class="row bg-darkness my-4 p-3 d-none d-md-flex">
+                                    {% if figure.files is not empty %}
+                                        <div class="pictures-container mCustomScrollbar">
+                                            {% for file in figure.files %}
+                                                {% if file.path starts with 'uploads' %}
+                                                    <figure class="pictures-figure-detail" id="picture-{{ file.id }}">
+                                                        <img src="{{ asset(file.path) }}" alt="{{ file.name }}">
+                                                        <div class="pictures-figure-detail-overlay">
+                                                            <button type="button" class="btn-figure btn-show-picture-figure" data-href="{{ asset(file.path) }}" data-toggle="tooltip" data-placement="bottom" title="Agrandir"></button>
+                                                            <button type="button" class="btn-figure btn-delete-picture-figure" data-id="{{ file.id }}" data-toggle="tooltip" data-placement="bottom" title="Supprimer"></button>
+                                                        </div>
+                                                    </figure>
+                                                {% elseif file.path starts with 'http' %}
+                                                    <figure class="pictures-figure-detail" id="picture-{{ file.id }}">
+                                                        <iframe src="{{ file.path }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                    </figure>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p class="mb-0 text-center w-100">Aucune illustration.</p>
+                                    {% endif %}
+                                </div>
+
+                                <button type="button" class="btn btn-theme mx-auto d-block d-md-none mt-3 mt-md-0" id="btnCollapseFigureMediasDetail" data-toggle="collapse" data-target="#collapseFigureMediasDetail" aria-expanded="false" aria-controls="collapseFigureMediasDetail">
+                                    <i class="fas fa-photo-video"></i> Voir les photos et vidéos
+                                </button>
+                                <div class="collapse" id="collapseFigureMediasDetail">
+                                    <div class="row bg-darkness my-4 p-3">
+                                        {% if figure.files is not empty %}
+                                            <div class="pictures-container mCustomScrollbar">
+                                                {% for file in figure.files %}
+                                                    {% if file.path starts with 'uploads' %}
+                                                        <figure class="pictures-figure-detail" id="picture-{{ file.id }}">
+                                                            <img src="{{ asset(file.path) }}" alt="{{ file.name }}">
+                                                            <div class="pictures-figure-detail-overlay">
+                                                                <button type="button" class="btn-figure btn-show-picture-figure" data-href="{{ asset(file.path) }}" data-toggle="tooltip" data-placement="bottom" title="Agrandir"></button>
+                                                                <button type="button" class="btn-figure btn-delete-picture-figure" data-id="{{ file.id }}" data-toggle="tooltip" data-placement="bottom" title="Supprimer"></button>
+                                                            </div>
+                                                        </figure>
+                                                    {% elseif file.path starts with 'http' %}
+                                                        <figure class="pictures-figure-detail" id="picture-{{ file.id }}">
+                                                            <iframe src="{{ file.path }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                        </figure>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            <p class="mb-0 text-center">Aucune illustration.</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                {{ figure.description }}
+                                                {% if figure.description is not null %}
+                                                    {{ figure.description|raw }}
+                                                {% else %}
+                                                    <p class="mb-0">Aucune description.</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="text-center mt-3 mb-0">
+                                            <span class="created-figure-detail" data-toggle="tooltip" data-placement="bottom" title="Catégorie">
+                                                <i class="fas fa-tag"></i> {{ figure.category.name }}
+                                            </span>
+                                            <span class="created-figure-detail" data-toggle="tooltip" data-placement="bottom" title="Créée le">
+                                                | <i class="fas fa-clock"></i> {{ figure.CreatedAt|date("d/m/Y H:i", "Europe/Paris") }}
+                                            </span>
+                                            {% if figure.CreatedAt != figure.UpdatedAt %}
+                                                <span class="updated-figure-detail" data-toggle="tooltip" data-placement="bottom" title="Mise à jour le">
+                                                    | <i class="fas fa-history"></i> {{ figure.UpdatedAt|date("d/m/Y H:i", "Europe/Paris") }}
+                                                </span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="figure-comments-modal">
+                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                    <hr>
+                                    <div class="figure-comments-form-modal">
+                                        <textarea id="comment-content-modal"></textarea>
+                                        <button type="button" class="btn btn-theme btn-block mt-3" id="btn-comment-content-modal" data-figure-id="{{ figure.id }}">Laisser un message <i class="fas fa-spinner fa-spin d-none"></i></button>
+                                    </div>
+
+                                {% endif %}
+                                <hr>
+                                {% if messages is not empty %}
+                                    {% for message in messages %}
+                                        <article class="comment-modal" id="comment-{{ message.id }}">
+                                            <div class="comment-figure-detail-overlay"></div>
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="{{ asset(message.user.avatar) }}" alt="Photo de profil">
+                                                        </td>
+                                                        <td>
+                                                            <p class="text-muted mb-0">{{ message.user.username }} &bull; {{ message.date }}</p>
+                                                            <article class="comment-body">{{ message.content|raw }}</article>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            {% if app.user.id is defined and (figure.user.id == app.user.id or message.user.id == app.user.id) %}
+                                                <button type="button" class="btn-comment btn-delete-comment-figure" data-toggle="tooltip" data-placement="bottom" title="Supprimer"></button>
+                                            {% endif %}
+                                        </article>
+                                    {% endfor %}
+
+                                    {% if messages|length >= messages_limit %}
+                                        <button type="button" class="btn btn-theme d-block mx-auto" id="btn-load-more-comments-modal" data-offset="{{ messages|length }}" data-limit="{{ messages_limit }}">
+                                            <i class="fas fa-plus"></i> Voir plus <i class="fas fa-spinner fa-spin d-none"></i>
+                                        </button>
+                                    {% endif %}
+                                {% else %}
+                                    <p class="mb-0 text-center no-message">Aucun message.</p>
+                                {% endif %}
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

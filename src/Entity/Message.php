@@ -105,7 +105,10 @@ class Message
      */
     public function getContent()
     {
-        return stream_get_contents($this->content);
+        if (!empty($this->content)) {
+            $this->content = stream_get_contents($this->content);
+        }
+        return $this->content;
     }
 
     /**

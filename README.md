@@ -11,4 +11,5 @@ Get started :
 * Make a _composer install_ and _yarn install_ in the project folder.
 * Modify _MAILER_DSN_ and _DATABASE_URL_ in _.env_ file.
 * Make a _php bin/console doctrine:migrations:migrate_ in the console in the projet folder to create database.
+* Make a _php bin/console doctrine:fixtures:load_ in the console in the project folder to create the first user.
 * Go to the root of the project on your browser (the root have to redirect in the public folder of the project folder).

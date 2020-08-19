@@ -22,7 +22,7 @@ $(document).ready(function () {
                                 '<tbody>' +
                                     '<tr>' +
                                         '<td>' +
-                                            '<img src="'+message.user.avatar+'" alt="Photo de profil">' +
+                                            '<img src="/'+message.user.avatar+'" alt="Photo de profil">' +
                                         '</td>' +
                                         '<td>' +
                                             '<p class="text-muted mb-0">'+message.user.username+' &bull; '+message.date+'</p>' +

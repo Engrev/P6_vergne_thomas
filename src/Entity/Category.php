@@ -59,6 +59,7 @@ class Category
      */
     public function __construct()
     {
+        $this->created_at = $this->updated_at = new \DateTime("now", new \DateTimeZone("Europe/Paris"));
         $this->figures = new ArrayCollection();
     }
 

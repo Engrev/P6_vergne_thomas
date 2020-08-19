@@ -13,6 +13,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserFixtures extends Fixture
 {
+    public const USER_REFERENCE = 'user-fixtures';
+
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -30,6 +32,7 @@ class UserFixtures extends Fixture
 
     /**
      * @param ObjectManager $manager
+     * php bin/console doctrine:fixtures:load --append
      */
     public function load(ObjectManager $manager)
     {
@@ -37,10 +40,12 @@ class UserFixtures extends Fixture
         $user->setUsername('username')
             ->setEmail('email')
             ->setPassword($this->passwordEncoder->encodePassword($user, 'password'))
+            ->setRoles()
             ->setIsActive(true)
             ->setIsVerified(true)
             ->setIsVerifiedAt()
         ;
+        $this->addReference(self::USER_REFERENCE, $user);
 
         $manager->persist($user);
         $manager->flush();

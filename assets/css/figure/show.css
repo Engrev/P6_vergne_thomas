@@ -5,7 +5,7 @@
 #figureDetailsModal .modal-body .figure-modal .card { border-radius: 0; }
 #figureDetailsModal .modal-body .figure-modal .card .card-body *:last-child { margin-bottom: 0; }
 #figureDetailsModal .modal-body .pictures-figure-detail { display: table-cell; vertical-align: middle; position: relative; }
-    #figureDetailsModal .modal-body .pictures-figure-detail img, #figureDetailsModal .modal-body .pictures-figure-detail iframe { margin-right: 20px; }
+#figureDetailsModal .modal-body .pictures-figure-detail img, #figureDetailsModal .modal-body .pictures-figure-detail iframe { margin-right: 20px; }
 #figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay {
     display: flex;
     position: absolute;
@@ -18,10 +18,12 @@
     transition: opacity 500ms ease;
 }
 #figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay:hover { opacity: 1; }
-#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-figure { font-size: 2rem; color: white; margin: auto; }
+#figureDetailsModal .btn-figure { color: white; margin: auto; border: none; background-color: transparent; }
+#figureDetailsModal .modal-title .btn-edit-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f304"; color: #ffc107; }
+#figureDetailsModal .modal-title .btn-delete-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; color: #dc3545; }
 #figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .fa-spinner { display: block; color: white; margin: auto; }
-#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-show-picture-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f06e"; }
-#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-delete-picture-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; }
+#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-show-picture-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f06e"; font-size: 2rem; }
+#figureDetailsModal .modal-body .pictures-figure-detail .pictures-figure-detail-overlay .btn-delete-picture-figure::after { font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f2ed"; font-size: 2rem; }
 #btnCollapseFigureMediasDetail { margin-bottom: 30px; }
 #btnCollapseFigureMediasDetail.collapsed { margin-bottom: 30px; }
 @media screen AND (min-width: 769px) {

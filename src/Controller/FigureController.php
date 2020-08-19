@@ -9,6 +9,8 @@ use App\Entity\Message;
 use App\Entity\User;
 use App\Form\FigureCreationType;
 use App\Helper\TimeSinceCreationTrait;
+use App\Service\FigureManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,6 +28,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class FigureController extends AbstractController
 {
     use TimeSinceCreationTrait;
+
+    private const MESSAGES_LIMIT = 10;
 
     /**
      * @var FigureRepository
@@ -63,14 +67,44 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/creation", name="figure.create", methods={"GET","POST"})
+     * @Route("/figure/{id}", name="figure.show", methods={"GET"}, requirements={"id":"\d+"})
      *
-     * @param Request            $request
-     * @param ValidatorInterface $validator
+     * @param Figure $figure
      *
      * @return Response
      */
-    public function create(Request $request, ValidatorInterface $validator): Response
+    public function show(Figure $figure): Response
+    {
+        $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
+
+        $conversation = $this->entityManager->getRepository(Message::class)->findBy(['figure' => $figure->getId()], ['created_at' => 'DESC'], self::MESSAGES_LIMIT);
+        if (!empty($conversation)) {
+            foreach ($conversation as $key => $message) {
+                $messages[$key]['id'] = $message->getId();
+                $messages[$key]['content'] = $message->getContent();
+                $messages[$key]['date'] = $this->dateSinceCreation($message->getCreatedAt()->format('Y-m-d H:i:s'));
+                $messages[$key]['user']['id'] = $message->getUser()->getId();
+                $messages[$key]['user']['username'] = $message->getUser()->getUsername();
+                $messages[$key]['user']['avatar'] = $message->getUser()->getAvatar();
+            }
+        } else {
+            $messages = '';
+        }
+
+        return $this->render('figure/show.html.twig', ['categories_navbar'=>$categories_navbar, 'figure'=>$figure, 'messages' => $messages, 'messages_limit' => self::MESSAGES_LIMIT]);
+    }
+
+    /**
+     * @Route("/figure/creation", name="figure.create", methods={"GET","POST"})
+     * @IsGranted("IS_AUTHENTICATED_REMEMBERED", message="Vous n'avez pas le droit d'accéder à cette page !")
+     *
+     * @param Request            $request
+     * @param ValidatorInterface $validator
+     * @param FigureManager      $figureManager
+     *
+     * @return Response
+     */
+    public function create(Request $request, ValidatorInterface $validator, FigureManager $figureManager): Response
     {
         $figure = new Figure();
         $form = $this->createForm(FigureCreationType::class, $figure);
@@ -95,92 +129,12 @@ class FigureController extends AbstractController
                 $this->entityManager->flush();
                 $this->addFlash('success', 'La figure a été créée avec succès !');
 
-                // Chemin de l'upload
-                $path = 'uploads'.DIRECTORY_SEPARATOR.'figures'.DIRECTORY_SEPARATOR.$figure->getId().DIRECTORY_SEPARATOR;
-
-                // Upload de l'image principale
-                $cover = $form->get('picture')->getData();
-                $coverNewFilename = md5(uniqid()).'.'.$cover->guessExtension();
-                $coverPath = $path.$coverNewFilename;
-                try {
-                    // Déplacement de l'image principale sur le serveur
-                    $cover->move($path, $coverNewFilename);
-                } catch (FileException $e) {
-                    $this->addFlash('danger', $e->getMessage());
-                    $this->redirectToRoute('figure.create');
-                }
-                // Préparation pour l'enregistrement en bdd
-                $figure->setPicture($coverPath);
-
-                // Upload des photos
-                $pictures = $form->get('files')->getData();
-                if ($pictures) {
-                    foreach ($pictures as $picture) {
-                        $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                        $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                        $safeFilename = $safeFilename.'.'.$picture->guessExtension();
-                        $newFilename = md5(uniqid()).'.'.$picture->guessExtension();
-                        $picturePath = $path.$newFilename;
-                        try {
-                            // Déplacement de la photo sur le serveur
-                            $picture->move($path, $newFilename);
-                        } catch (FileException $e) {
-                            $this->addFlash('danger', $e->getMessage());
-                            $this->redirectToRoute('figure.create');
-                        }
-                        // Création d'un fichier
-                        $file = (new File())
-                            ->setFigure($figure)
-                            ->setPath($picturePath)
-                            ->setName($newFilename)
-                            ->setUploadedName($safeFilename);
-                        $figure->addFile($file);
-                    }
-                    $this->addFlash('success', 'La/les photo(s) a/ont été envoyée(s) avec succès !');
-                }
-
-                //Upload de(s) vidéo(s)
-                $videosLink = $request->request->get('figure_creation_videolink');
-                $videosCode = $request->request->get('figure_creation_videocode');
-                $videos = array_merge($videosLink, $videosCode);
-                if (!empty($videos)) {
-                    foreach ($videos as $lien) {
-                        if (!empty($lien)) {
-                            if (preg_match('#&t=[0-9]+s$#', $lien, $matches) || preg_match('#&feature=youtu\.be$#', $lien, $matches)) {
-                                $lien = str_replace($matches[0], '', $lien);
-                            }
-                            if (preg_match('#^https://www\.youtube\.com/watch\?v=[a-zA-Z0-9_]+$#', $lien)) {
-                                $videoName = explode('?v=', $lien);
-                            } elseif (preg_match('#^https://youtu\.be/[a-zA-Z0-9_]+$#', $lien)) {
-                                $videoName = explode('be/', $lien);
-                            } elseif (preg_match('#^<iframe#', $lien)) {
-                                $parts = explode(' ', $lien);
-                                foreach ($parts as $part) {
-                                    if (preg_match('#^src=#', $part)) {
-                                        $partName = str_replace('src=', '', $part);
-                                        $partName = str_replace('"', '', $partName);
-                                        $videoName = explode('embed/', $partName);
-                                    }
-                                }
-                            } else {
-                                $videoName = '';
-                            }
-                            $newVideoname = is_array($videoName) ? $videoName[1] : $videoName;
-                            // Création d'un fichier
-                            $file = (new File())
-                                ->setFigure($figure)
-                                ->setPath('https://www.youtube.com/embed/'.$newVideoname)
-                                ->setName($newVideoname)
-                                ->setUploadedName($newVideoname);
-                            $figure->addFile($file);
-                        }
-                    }
-                }
+                $figureManager->set($figure, $form, $request, 'create');
 
                 // Enregistrement des photos en bdd par la figure
                 $this->entityManager->persist($figure);
                 $this->entityManager->flush();
-                $this->redirectToRoute('index');
+                return $this->redirectToRoute('index');
             }
         }
 
@@ -191,115 +145,30 @@ class FigureController extends AbstractController
 
     /**
      * @Route("/figure/modification/{id}", name="figure.edit", methods={"GET","POST"})
+     * @IsGranted("IS_AUTHENTICATED_REMEMBERED", message="Vous n'avez pas le droit d'accéder à cette page !")
      *
-     * @param Request $request
-     * @param Figure  $figure
+     * @param Request       $request
+     * @param Figure        $figure
+     * @param FigureManager $figureManager
      *
      * @return Response
      */
-    public function edit(Request $request, Figure $figure): Response
+    public function edit(Request $request, Figure $figure, FigureManager $figureManager): Response
     {
+        if ($this->getUser()->getId() != $figure->getUser()->getId()) {
+            $this->addFlash('danger', 'Vous n\'avez pas le droit de modifier cette figure !');
+            return $this->redirectToRoute('index');
+        }
         $form = $this->createForm(FigureCreationType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Chemin de l'upload
-            $path = 'uploads'.DIRECTORY_SEPARATOR.'figures'.DIRECTORY_SEPARATOR.$figure->getId().DIRECTORY_SEPARATOR;
+            $figureManager->set($figure, $form, $request, 'edit');
 
-            // Upload de l'image principale
-            $originalPicture = $form->get('original_picture')->getData();
-            if (!empty($originalPicture)) {
-                $originalPicture = str_replace('/', '', $originalPicture);
-            }
-            $cover = $form->get('picture')->getData();
-            if (!is_null($cover)) {
-                $coverNewFilename = md5(uniqid()).'.'.$cover->guessExtension();
-                $coverPath = $path.$coverNewFilename;
-                try {
-                    // Déplacement de l'image principale sur le serveur
-                    $cover->move($path, $coverNewFilename);
-                } catch (FileException $e) {
-                    $this->addFlash('danger', $e->getMessage());
-                    $this->redirectToRoute('figure.edit', ['id' => $figure->getId()]);
-                }
-                // Remplacement de l'image principale
-                if (!empty($originalPicture)) {
-                    unlink($originalPicture);
-                }
-                $figure->setPicture($coverPath);
-            } else {
-                $figure->setPicture($originalPicture);
-            }
-
-            // Upload des photos
-            $pictures = $form->get('files')->getData();
-            if (!empty($pictures)) {
-                foreach ($pictures as $picture) {
-                    $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                    $safeFilename = $safeFilename.'.'.$picture->guessExtension();
-                    $newFilename = md5(uniqid()).'.'.$picture->guessExtension();
-                    $picturePath = $path.$newFilename;
-                    try {
-                        // Déplacement de la photo sur le serveur
-                        $picture->move($path, $newFilename);
-                    } catch (FileException $e) {
-                        $this->addFlash('danger', $e->getMessage());
-                        $this->redirectToRoute('figure.edit', ['id' => $figure->getId()]);
-                    }
-                    // Création d'un fichier
-                    $file = (new File())
-                        ->setFigure($figure)
-                        ->setPath($picturePath)
-                        ->setName($newFilename)
-                        ->setUploadedName($safeFilename);
-                    $figure->addFile($file);
-                }
-            }
-
-            //Upload de(s) vidéo(s)
-            $videosLink = $request->request->get('figure_creation_videolink');
-            $videosCode = $request->request->get('figure_creation_videocode');
-            $videos = array_merge($videosLink, $videosCode);
-            if (!empty($videos)) {
-                foreach ($videos as $lien) {
-                    if (!empty($lien)) {
-                        if (preg_match('#&t=[0-9]+s$#', $lien, $matches) || preg_match('#&feature=youtu\.be$#', $lien, $matches)) {
-                            $lien = str_replace($matches[0], '', $lien);
-                        }
-                        if (preg_match('#^https://www\.youtube\.com/watch\?v=[a-zA-Z0-9_]+$#', $lien)) {
-                            $videoName = explode('?v=', $lien);
-                        } elseif (preg_match('#^https://youtu\.be/[a-zA-Z0-9_]+$#', $lien)) {
-                            $videoName = explode('be/', $lien);
-                        } elseif (preg_match('#^<iframe#', $lien)) {
-                            $parts = explode(' ', $lien);
-                            foreach ($parts as $part) {
-                                if (preg_match('#^src=#', $part)) {
-                                    $partName = str_replace('src=', '', $part);
-                                    $partName = str_replace('"', '', $partName);
-                                    $videoName = explode('embed/', $partName);
-                                }
-                            }
-                        } else {
-                            $videoName = '';
-                        }
-                        $newVideoname = is_array($videoName) ? $videoName[1] : $videoName;
-                        // Création d'un fichier
-                        $file = (new File())
-                            ->setFigure($figure)
-                            ->setPath('https://www.youtube.com/embed/'.$newVideoname)
-                            ->setName($newVideoname)
-                            ->setUploadedName($newVideoname);
-                        $figure->addFile($file);
-                    }
-                }
-            }
-
-            $figure->setUpdatedAt();
             // Mise à jour de la figure
             $this->entityManager->flush();
             $this->addFlash('success', 'La figure a été mise à jour avec succès !');
-            $this->redirectToRoute('index');
+            return $this->redirectToRoute('index');
         }
 
         $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
@@ -314,7 +183,7 @@ class FigureController extends AbstractController
      *
      * @return bool|JsonResponse
      */
-    public function ajaxShow(Request $request): JsonResponse
+    /*public function ajaxShow(Request $request): JsonResponse
     {
         $isAjax = $request->isXmlHttpRequest();
         if ($isAjax) {
@@ -363,7 +232,7 @@ class FigureController extends AbstractController
             }
         }
         return false;
-    }
+    }*/
 
     /**
      * @Route("/ajax/figure/delete/{id}", name="figure.ajax.delete", methods={"DELETE"})
