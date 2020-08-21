@@ -67,34 +67,6 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}", name="figure.show", methods={"GET"}, requirements={"id":"\d+"})
-     *
-     * @param Figure $figure
-     *
-     * @return Response
-     */
-    public function show(Figure $figure): Response
-    {
-        $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
-
-        $conversation = $this->entityManager->getRepository(Message::class)->findBy(['figure' => $figure->getId()], ['created_at' => 'DESC'], self::MESSAGES_LIMIT);
-        if (!empty($conversation)) {
-            foreach ($conversation as $key => $message) {
-                $messages[$key]['id'] = $message->getId();
-                $messages[$key]['content'] = $message->getContent();
-                $messages[$key]['date'] = $this->dateSinceCreation($message->getCreatedAt()->format('Y-m-d H:i:s'));
-                $messages[$key]['user']['id'] = $message->getUser()->getId();
-                $messages[$key]['user']['username'] = $message->getUser()->getUsername();
-                $messages[$key]['user']['avatar'] = $message->getUser()->getAvatar();
-            }
-        } else {
-            $messages = '';
-        }
-
-        return $this->render('figure/show.html.twig', ['categories_navbar'=>$categories_navbar, 'figure'=>$figure, 'messages' => $messages, 'messages_limit' => self::MESSAGES_LIMIT]);
-    }
-
-    /**
      * @Route("/figure/creation", name="figure.create", methods={"GET","POST"})
      * @IsGranted("IS_AUTHENTICATED_REMEMBERED", message="Vous n'avez pas le droit d'accéder à cette page !")
      *
@@ -177,62 +149,32 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/figure/show", name="figure.ajax.show", methods={"POST"})
+     * @Route("/figure/{name}", name="figure.show", methods={"GET"})
      *
-     * @param Request           $request
+     * @param Figure $figure
      *
-     * @return bool|JsonResponse
+     * @return Response
      */
-    /*public function ajaxShow(Request $request): JsonResponse
+    public function show(Figure $figure): Response
     {
-        $isAjax = $request->isXmlHttpRequest();
-        if ($isAjax) {
-            $data = $request->request->all();
+        $categories_navbar = $this->entityManager->getRepository(Category::class)->findAll();
 
-            $figure = $this->repository->findOneBy(['id' => $data['figure_id']]);
-            $files = $this->entityManager->getRepository(File::class)->findBy(['figure' => $data['figure_id']]);
-            $conversation = $this->entityManager->getRepository(Message::class)->findBy(['figure' => $data['figure_id']], ['created_at' => 'DESC'], $data['limit']);
-
-            if (!empty($files)) {
-                foreach ($files as $key => $file) {
-                    $pictures[$key]['id'] = $file->getId();
-                    $pictures[$key]['path'] = $file->getPath();
-                    $pictures[$key]['uploaded_name'] = $file->getUploadedName();
-                }
-            } else {
-                $pictures = '';
+        $conversation = $this->entityManager->getRepository(Message::class)->findBy(['figure' => $figure->getId()], ['created_at' => 'DESC'], self::MESSAGES_LIMIT);
+        if (!empty($conversation)) {
+            foreach ($conversation as $key => $message) {
+                $messages[$key]['id'] = $message->getId();
+                $messages[$key]['content'] = $message->getContent();
+                $messages[$key]['date'] = $this->dateSinceCreation($message->getCreatedAt()->format('Y-m-d H:i:s'));
+                $messages[$key]['user']['id'] = $message->getUser()->getId();
+                $messages[$key]['user']['username'] = $message->getUser()->getUsername();
+                $messages[$key]['user']['avatar'] = $message->getUser()->getAvatar();
             }
-            if (!empty($conversation)) {
-                foreach ($conversation as $key => $message) {
-                    $messages[$key]['id'] = $message->getId();
-                    $messages[$key]['content'] = $message->getContent();
-                    $messages[$key]['date'] = $this->dateSinceCreation($message->getCreatedAt()->format('Y-m-d H:i:s'));
-                    $messages[$key]['user']['username'] = $message->getUser()->getUsername();
-                    $messages[$key]['user']['avatar'] = $message->getUser()->getAvatar();
-                }
-            } else {
-                $messages = '';
-            }
-
-            if (!is_null($figure)) {
-                return new JsonResponse([
-                    'figure' => [
-                        'id' => $figure->getId(),
-                        'name' => $figure->getName(),
-                        'description' => $figure->getDescription(),
-                        'cover' => $figure->getPicture(),
-                        'created_at' => $figure->getCreatedAt()->format('d/m/Y à H:i'),
-                        'updated_at' => $figure->getUpdatedAt()->format('d/m/Y à H:i'),
-                        'user' => $figure->getUser()->getId(),
-                        'categorie' => $figure->getCategory()->getName()
-                    ],
-                    'pictures' => $pictures,
-                    'messages' => $messages
-                ]);
-            }
+        } else {
+            $messages = '';
         }
-        return false;
-    }*/
+
+        return $this->render('figure/show.html.twig', ['categories_navbar'=>$categories_navbar, 'figure'=>$figure, 'messages' => $messages, 'messages_limit' => self::MESSAGES_LIMIT]);
+    }
 
     /**
      * @Route("/ajax/figure/delete/{id}", name="figure.ajax.delete", methods={"DELETE"})

@@ -24,7 +24,7 @@
                                          alt="{{ figure.name }}"
                                     >
                                     <div class="card-body">
-                                        <h5 class="card-title mb-0"><a href="{{ path('figure.show', {id: figure.id}) }}">{{ figure.name }}</a></h5>
+                                        <h5 class="card-title mb-0"><a href="{{ path('figure.show', {name: figure.name|lower}) }}">{{ figure.name }}</a></h5>
                                         {% if app.user.id is defined and figure.user.id == app.user.id %}
                                             <button type="button" class="btn-figure btn-delete-figure float-right ml-3" data-toggle="tooltip" data-placement="bottom" title="Supprimer"></button>
                                             <i class="fas fa-spinner fa-spin float-right ml-3 d-none"></i>
@@ -46,7 +46,7 @@
                                                      alt="{{ figure.name }}"
                                                 >
                                                 <div class="card-body">
-                                                    <h5 class="card-title mb-0"><a href="{{ path('figure.show', {id: figure.id}) }}">{{ figure.name }}</a></h5>
+                                                    <h5 class="card-title mb-0"><a href="{{ path('figure.show', {name: figure.name|lower}) }}">{{ figure.name }}</a></h5>
                                                     {% if app.user.id is defined and figure.user.id == app.user.id %}
                                                         <button type="button" class="btn-figure btn-delete-figure float-right ml-3" data-toggle="tooltip" data-placement="bottom" title="Supprimer"></button>
                                                         <i class="fas fa-spinner fa-spin float-right ml-3 d-none"></i>
