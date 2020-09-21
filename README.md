@@ -7,9 +7,9 @@ Require :
 * MySQL 5.7.24
 
 Get started :
-* Clone the repository with : _git clone https://github.com/Engrev/P6_vergne_thomas.git_.
-* Make a _composer install_ and _yarn install_ in the project folder.
-* Modify _MAILER_DSN_ and _DATABASE_URL_ in _.env_ file.
-* Make a _php bin/console doctrine:migrations:migrate_ in the console in the projet folder to create database.
-* Make a _php bin/console doctrine:fixtures:load_ in the console in the project folder to create the first user.
+* Clone the repository with : `git clone https://github.com/Engrev/P6_vergne_thomas.git`.
+* Make a `composer install` and `yarn install` in the project folder.
+* Modify `MAILER_DSN` and `DATABASE_URL` in `.env` file.
+* Make a `php bin/console doctrine:migrations:migrate` in the console in the projet folder to create database.
+* Make a `php bin/console doctrine:fixtures:load` in the console in the project folder to create the first user.
 * Go to the root of the project on your browser (the root have to redirect in the public folder of the project folder).
